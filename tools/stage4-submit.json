@@ -1,0 +1,5 @@
+{
+    "problemVersion":  "2101",
+    "language":  "JAVA_21",
+    "sourceCode":  "public class Main { public static void main(String[] args) { System.out.println(true); } }"
+}

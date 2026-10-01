@@ -1,0 +1,5 @@
+﻿{
+    "problemVersion":  "2101",
+    "language":  "C_17",
+    "sourceCode":  "#include \u003cstdio.h\u003e\nint main(void){long long x;if(scanf(\"%lld\",\u0026x)!=1)return 0;if(x\u003c0){printf(\"false\");return 0;}long long t=x,r=0;while(t){r=r*10+t%10;t/=10;}printf(r==x?\"true\":\"false\");return 0;}"
+}

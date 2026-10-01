@@ -2,6 +2,8 @@ package com.codeagentoj.server.api;
 
 import com.codeagentoj.server.problem.ProblemDtos.*;
 import com.codeagentoj.server.problem.ProblemService;
+import com.codeagentoj.server.submission.OutboxMonitor;
+import com.codeagentoj.server.submission.SubmissionService;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +18,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/admin")
 public class AdminController {
     private final ProblemService problems;
+    private final SubmissionService submissions;
+    private final OutboxMonitor outbox;
     private final JdbcTemplate jdbc;
 
-    public AdminController(ProblemService problems, JdbcTemplate jdbc) { this.problems = problems; this.jdbc = jdbc; }
+    public AdminController(ProblemService problems, SubmissionService submissions, OutboxMonitor outbox, JdbcTemplate jdbc) { this.problems = problems; this.submissions = submissions; this.outbox = outbox; this.jdbc = jdbc; }
+
+    public record RejudgeRequest(long problemVersionId, Integer limit) {}
 
     public record ProblemAdminRow(String slug, String title, String difficulty, String status, Long publishedVersion, Instant updatedAt) {}
     public record VersionAdmin(long id, int versionNo, String status, Instant createdAt, Instant publishedAt, int exampleCount, int testCaseCount) {}
@@ -45,10 +51,39 @@ public class AdminController {
         return ApiResponse.ok(new ProblemManagement(problem,versions,cases));
     }
 
-    @GetMapping("/agent/audits") @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<List<AgentAudit>> audits(@RequestParam(defaultValue="100") int limit) {
+    @GetMapping("/agent/audits") @PreAuthorize("hasRole('ADMIN')")    public ApiResponse<List<AgentAudit>> audits(@RequestParam(defaultValue="100") int limit) {
         int safeLimit = Math.min(Math.max(limit,1),500);
         return ApiResponse.ok(jdbc.query("SELECT id,session_id,intent,route,safety_status,blocked_reason,created_at FROM agent_audits ORDER BY created_at DESC LIMIT " + safeLimit,(rs,n)->new AgentAudit(rs.getLong(1),rs.getLong(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getTimestamp(7).toInstant())));
+    }
+
+    @PostMapping("/submissions/rejudge") @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<java.util.Map<String,Object>> rejudge(@RequestBody RejudgeRequest request) {
+        int rejudged = submissions.rejudgeByVersion(request.problemVersionId(), request.limit() == null ? 200 : request.limit());
+        return ApiResponse.ok(java.util.Map.of("problemVersionId", request.problemVersionId(), "rejudged", rejudged));
+    }
+
+    @GetMapping("/judge/queue") @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<java.util.Map<String,Object>> judgeQueue() {
+        OutboxMonitor.Stats stats = outbox.stats();
+        var deadEvents = jdbc.query("SELECT id,aggregate_id,event_type,attempts,last_error,dead_lettered_at FROM outbox_events WHERE status='DEAD' ORDER BY dead_lettered_at DESC LIMIT 50",
+                (rs,n) -> {
+                    java.util.Map<String,Object> row = new java.util.LinkedHashMap<>();
+                    row.put("id", rs.getLong(1)); row.put("aggregateId", rs.getLong(2)); row.put("eventType", rs.getString(3));
+                    row.put("attempts", rs.getInt(4)); row.put("lastError", rs.getString(5) == null ? "" : rs.getString(5));
+                    row.put("deadLetteredAt", rs.getTimestamp(6) == null ? "" : rs.getTimestamp(6).toInstant().toString());
+                    return row;
+                });
+        java.util.Map<String,Object> body = new java.util.LinkedHashMap<>();
+        body.put("pending", stats.pending()); body.put("published", stats.published()); body.put("dead", stats.dead());
+        body.put("oldestPendingSeconds", stats.oldestPendingSeconds() == null ? 0 : stats.oldestPendingSeconds());
+        body.put("deadEvents", deadEvents);
+        return ApiResponse.ok(body);
+    }
+
+    @PostMapping("/judge/outbox/{id}/requeue") @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<java.util.Map<String,Object>> requeue(@PathVariable long id) {
+        int changed = jdbc.update("UPDATE outbox_events SET status='PENDING',attempts=0,last_error=NULL,available_at=CURRENT_TIMESTAMP,dead_lettered_at=NULL WHERE id=? AND status='DEAD'", id);
+        return ApiResponse.ok(java.util.Map.of("requeued", changed, "id", id));
     }
 
     @GetMapping("/users") @PreAuthorize("hasRole('ADMIN')")

@@ -1,6 +1,10 @@
+"use client";
+
 import ProfileShortcut from "../components/profile-shortcut";
 import DesktopPet from "../components/desktop-pet";
+import { usePreferences } from "../lib/preferences";
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  return <><ProfileShortcut /><DesktopPet />{children}</>;
+  const [preferences] = usePreferences();
+  return <><ProfileShortcut />{preferences.desktopPet && <DesktopPet />}{children}</>;
 }

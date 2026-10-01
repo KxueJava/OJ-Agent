@@ -1,0 +1,5 @@
+﻿{
+    "problemVersion":  "2101",
+    "language":  "CPP_17",
+    "sourceCode":  "#include \u003cbits/stdc++.h\u003e\nint main(){long long x;if(!(std::cin\u003e\u003ex))return 0;if(x\u003c0){std::cout\u003c\u003c\"false\";return 0;}long long t=x,r=0;while(t){r=r*10+t%10;t/=10;}std::cout\u003c\u003c(r==x?\"true\":\"false\");return 0;}"
+}

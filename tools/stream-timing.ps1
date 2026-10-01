@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Continue'
+﻿$ErrorActionPreference = 'Continue'
 $out = 'D:\workspace\OJ-Agent\tools\stream-timing.txt'
 Set-Content -Path $out -Value "stream timing $(Get-Date -Format s)" -Encoding UTF8
 function Say($m) { $m | Tee-Object -FilePath $out -Append }

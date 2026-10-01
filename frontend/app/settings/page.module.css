@@ -1,0 +1,24 @@
+.page{min-height:100dvh;background:#f3f1eb;color:#252a2d;font:13px/1.55 "Avenir Next","Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{width:min(820px,calc(100% - 40px));margin:0 auto;padding:38px 0 70px}
+.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid #d8d5ce}
+.heading h1{margin:0;font-size:28px;letter-spacing:-.02em}
+.heading p:not(.eyebrow){margin:6px 0 0;color:#858981;font-size:12px}
+.eyebrow{margin:0 0 7px;color:#d37737;font:10px Consolas,monospace;letter-spacing:.12em;text-transform:uppercase}
+.saved{color:#277456;font:11px Consolas,monospace}
+.group{margin-top:30px}
+.group h2{margin:0 0 12px;font-size:15px;font-weight:700}
+.row{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:14px 15px;border:1px solid #d8d5ce;border-bottom:0;background:#ebe9e2}
+.row:last-child{border-bottom:1px solid #d8d5ce}
+.row strong{display:block;font-size:13px}
+.row small{display:block;margin-top:4px;color:#858981;font-size:11px;line-height:1.6;max-width:520px}
+.row select{padding:7px 10px;border:1px solid #c9c7bf;background:#f3f1eb;color:#252a2d;font:12px inherit}
+.stepper{display:flex;align-items:center;gap:9px;font:12px Consolas,monospace}
+.stepper button{width:28px;height:28px;border:1px solid #c9c7bf;background:#f3f1eb;color:#4f554f;font-size:14px;cursor:pointer}
+.switch{display:flex;align-items:center;gap:8px;font-size:12px;color:#4f554f;cursor:pointer}
+.switch input{width:16px;height:16px;accent-color:#d37737}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.primary,.ghost{display:inline-flex;align-items:center;height:36px;padding:0 15px;text-decoration:none;font-size:12px;font-weight:700;cursor:pointer}
+.primary{border:1px solid #d37737;color:#fff;background:#d37737}
+.ghost{border:1px solid #c9c7bf;color:#4f554f;background:transparent}
+.note{margin-top:20px;color:#858981;font-size:11px;line-height:1.7}
+@media(max-width:680px){.row{display:block}.row select,.stepper,.switch{margin-top:10px}}

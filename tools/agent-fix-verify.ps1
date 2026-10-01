@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)][string]$ApiKey,
     [int]$Port = 8081,
     [string]$Slug = 'number-of-islands'
