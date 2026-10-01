@@ -1,0 +1,221 @@
+{
+  "batch": 2,
+  "problems": [
+    {
+      "slug": "maximum-nesting-depth-of-the-parentheses",
+      "title": "括号的最大嵌套深度",
+      "difficulty": "EASY",
+      "tags": ["string", "stack"],
+      "statement": "给定一个合法的算术表达式字符串 `s`，求出其中括号的最大嵌套深度。某个位置处的深度，等于该位置之前尚未闭合的左括号数量。\n输入格式：一行，字符串 `s`，不带引号，只含数字、`+`、`-`、`*`、`/`、`(` 和 `)`，保证括号配对合法。\n输出格式：一行，一个十进制整数，表示表达式中括号的最大嵌套深度；若表达式中不含括号，输出 `0`。",
+      "constraints": "- `1 <= s.length <= 10^4`\n- `s` 只含数字、`+`、`-`、`*`、`/`、`(` 和 `)`\n- 括号配对合法，表达式非空",
+      "examples": [
+        { "input": "(1+(2*3)+((8)/4))+1", "output": "3" },
+        { "input": "1+(2*3)/(2-1)", "output": "1" }
+      ],
+      "tests": [
+        { "input": "(1+(2*3)+((8)/4))+1", "visibility": "PUBLIC" },
+        { "input": "1+(2*3)/(2-1)", "visibility": "HIDDEN" },
+        { "input": "1", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        int depth = 0;\n        int max = 0;\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '(') {\n                depth++;\n                if (depth > max) max = depth;\n            } else if (c == ')') {\n                depth--;\n            }\n        }\n        System.out.println(max);\n    }\n}\n"
+    },
+    {
+      "slug": "valid-palindrome",
+      "title": "验证回文串",
+      "difficulty": "EASY",
+      "tags": ["string", "two-pointers"],
+      "statement": "给定一个字符串 `s`，先忽略它的大小写，并只保留其中的英文字母和数字，再判断得到的字符串从左到右读与从右到左读是否完全一致；空字符串视为回文串。\n输入格式：一行，字符串 `s`，不带引号，可能包含英文字母、数字、空格和标点符号，行首与行尾没有空格（也可能整行为空）。\n输出格式：一行，若处理后是回文串输出 `true`，否则输出 `false`，均为小写。",
+      "constraints": "- `0 <= s.length <= 2 * 10^5`\n- `s` 只含可打印 ASCII 字符\n- `s` 的行首与行尾没有空格",
+      "examples": [
+        { "input": "A man, a plan, a canal: Panama", "output": "true" },
+        { "input": "0P", "output": "false" }
+      ],
+      "tests": [
+        { "input": "A man, a plan, a canal: Panama", "visibility": "PUBLIC" },
+        { "input": "0P", "visibility": "HIDDEN" },
+        { "input": "", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) s = \"\";\n        int i = 0, j = s.length() - 1;\n        while (i < j) {\n            char a = s.charAt(i), b = s.charAt(j);\n            if (!isAlnum(a)) { i++; continue; }\n            if (!isAlnum(b)) { j--; continue; }\n            if (Character.toLowerCase(a) != Character.toLowerCase(b)) {\n                System.out.println(\"false\");\n                return;\n            }\n            i++;\n            j--;\n        }\n        System.out.println(\"true\");\n    }\n\n    private static boolean isAlnum(char c) {\n        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');\n    }\n}\n"
+    },
+    {
+      "slug": "remove-all-adjacent-duplicates-in-string",
+      "title": "删除字符串中的所有相邻重复项",
+      "difficulty": "EASY",
+      "tags": ["string", "stack"],
+      "statement": "给定一个只含小写英文字母的字符串 `s`。反复执行以下操作：找出字符串中相邻且相同的两个字符并删除它们；直到不存在这样的相邻重复字符为止。输出最终剩下的字符串。\n输入格式：一行，字符串 `s`，不带引号，只含小写英文字母。\n输出格式：一行，删除所有相邻重复项后剩下的字符串，直接打印内容，不加引号。",
+      "constraints": "- `1 <= s.length <= 10^5`\n- `s` 只含小写英文字母",
+      "examples": [
+        { "input": "abbaca", "output": "ca" },
+        { "input": "azxxzy", "output": "ay" }
+      ],
+      "tests": [
+        { "input": "abbaca", "visibility": "PUBLIC" },
+        { "input": "aaaaaaaaa", "visibility": "HIDDEN" },
+        { "input": "aab", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (sb.length() > 0 && sb.charAt(sb.length() - 1) == c) sb.deleteCharAt(sb.length() - 1);\n            else sb.append(c);\n        }\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "baseball-game",
+      "title": "棒球比赛",
+      "difficulty": "EASY",
+      "tags": ["stack", "simulation"],
+      "statement": "记录一场棒球比赛的得分。输入是一串用 `,` 分隔的操作，每个操作的含义如下：\n- 一个十进制整数 `x`：本回合得到 `x` 分；\n- `+`：本回合得分为前两回合得分之和；\n- `D`：本回合得分为前一回合得分的两倍；\n- `C`：前一回合得分无效，把它从记录中移除。\n所有操作处理完毕后，输出所有有效回合得分之和。\n输入格式：一行，操作序列，操作之间用 `,` 分隔，例如 `5,2,C,D,+`。\n输出格式：一行，一个十进制整数，表示所有有效回合得分之和。",
+      "constraints": "- `1 <= 操作数 <= 10^4`\n- 保证每个操作都有足够的已有回合记录（`+` 至少有两个，`D` 与 `C` 至少有一个）\n- 所有回合得分与总分都在 32 位有符号整数范围内",
+      "examples": [
+        { "input": "5,2,C,D,+", "output": "30" },
+        { "input": "5,-2,4,C,D,9,+,+", "output": "27" }
+      ],
+      "tests": [
+        { "input": "5,2,C,D,+", "visibility": "PUBLIC" },
+        { "input": "5,-2,4,C,D,9,+,+", "visibility": "HIDDEN" },
+        { "input": "1", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        Deque<Long> st = new ArrayDeque<>();\n        long sum = 0;\n        for (String raw : line.split(\",\")) {\n            String op = raw.trim();\n            if (op.isEmpty()) continue;\n            if (op.equals(\"+\")) {\n                long a = st.pop();\n                long b = st.pop();\n                st.push(b);\n                st.push(a);\n                st.push(a + b);\n                sum += a + b;\n            } else if (op.equals(\"D\")) {\n                long d = st.peek() * 2;\n                st.push(d);\n                sum += d;\n            } else if (op.equals(\"C\")) {\n                sum -= st.pop();\n            } else {\n                long v = Long.parseLong(op);\n                st.push(v);\n                sum += v;\n            }\n        }\n        System.out.println(sum);\n    }\n}\n"
+    },
+    {
+      "slug": "number-of-recent-calls",
+      "title": "最近的请求次数",
+      "difficulty": "EASY",
+      "tags": ["queue", "simulation"],
+      "statement": "按时间先后依次接收若干请求。每当收到一个新请求的时刻 `t` 时，统计闭区间 `[t - 3000, t]` 内收到的请求数量（包含当前这次请求）。\n输入格式：一行，若干整数，表示按递增顺序到来的请求时刻，整数之间用 `,` 分隔，例如 `1,100,3001,3002`。\n输出格式：一行，对每个请求依次输出它的统计数量，数字之间用 `,` 分隔。",
+      "constraints": "- `1 <= 请求数 <= 10^4`\n- `1 <= t <= 10^9`\n- 请求时刻严格递增",
+      "examples": [
+        { "input": "1,100,3001,3002", "output": "1,2,3,3" },
+        { "input": "1,3000,6000", "output": "1,2,2" }
+      ],
+      "tests": [
+        { "input": "1,100,3001,3002", "visibility": "PUBLIC" },
+        { "input": "3000", "visibility": "HIDDEN" },
+        { "input": "1,3000,6000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        Deque<Long> q = new ArrayDeque<>();\n        StringBuilder sb = new StringBuilder();\n        for (String raw : line.split(\",\")) {\n            String token = raw.trim();\n            if (token.isEmpty()) continue;\n            long t = Long.parseLong(token);\n            q.addLast(t);\n            while (q.peekFirst() < t - 3000) q.pollFirst();\n            if (sb.length() > 0) sb.append(',');\n            sb.append(q.size());\n        }\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "length-of-last-word",
+      "title": "最后一个单词的长度",
+      "difficulty": "EASY",
+      "tags": ["string"],
+      "statement": "给定一个由单词和空格组成的字符串 `s`，返回最后一个单词的长度。单词是指仅由英文字母组成、且不被空格分隔的一段连续字符。\n输入格式：一行，字符串 `s`，不带引号，可能包含前导或尾随空格，单词之间也可能有多个连续空格。\n输出格式：一行，一个十进制整数，表示最后一个单词的长度。",
+      "constraints": "- `1 <= s.length <= 10^4`\n- `s` 只含英文字母和空格\n- `s` 中至少包含一个单词（即至少有一个英文字母）",
+      "examples": [
+        { "input": "Hello World", "output": "5" },
+        { "input": "   fly me   to   the moon  ", "output": "4" }
+      ],
+      "tests": [
+        { "input": "Hello World", "visibility": "PUBLIC" },
+        { "input": "   fly me   to   the moon  ", "visibility": "HIDDEN" },
+        { "input": "a", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        String t = s.trim();\n        int i = t.length() - 1;\n        while (i >= 0 && t.charAt(i) != ' ') i--;\n        System.out.println(t.length() - 1 - i);\n    }\n}\n"
+    },
+    {
+      "slug": "evaluate-reverse-polish-notation",
+      "title": "逆波兰表达式求值",
+      "difficulty": "MEDIUM",
+      "tags": ["stack", "math"],
+      "statement": "给定一个用逆波兰表示法（后缀表达式）写出的算式，求出它的值。合法的运算符为 `+`、`-`、`*`、`/`，其中两个操作数的顺序按它们在算式中出现的先后确定，除法向零取整。\n输入格式：一行，若干 token，token 之间用 `,` 分隔，每个 token 是十进制整数或四种运算符之一，例如 `2,1,+,3,*`。\n输出格式：一行，一个十进制整数，表示算式的值。",
+      "constraints": "- `1 <= token 数 <= 10^4`\n- 算式一定合法，任意时刻除法都不会除以 0\n- 所有中间结果与最终结果都在 32 位有符号整数范围内",
+      "examples": [
+        { "input": "2,1,+,3,*", "output": "9" },
+        { "input": "4,13,5,/,+", "output": "6" }
+      ],
+      "tests": [
+        { "input": "2,1,+,3,*", "visibility": "PUBLIC" },
+        { "input": "4,13,5,/,+", "visibility": "HIDDEN" },
+        { "input": "10,6,9,3,+,-11,*,/,*,17,+,5,+", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        Deque<Integer> st = new ArrayDeque<>();\n        for (String raw : line.split(\",\")) {\n            String t = raw.trim();\n            if (t.isEmpty()) continue;\n            if (t.equals(\"+\") || t.equals(\"-\") || t.equals(\"*\") || t.equals(\"/\")) {\n                int b = st.pop();\n                int a = st.pop();\n                int r;\n                if (t.equals(\"+\")) r = a + b;\n                else if (t.equals(\"-\")) r = a - b;\n                else if (t.equals(\"*\")) r = a * b;\n                else r = a / b;\n                st.push(r);\n            } else {\n                st.push(Integer.parseInt(t));\n            }\n        }\n        System.out.println(st.pop());\n    }\n}\n"
+    },
+    {
+      "slug": "decode-string",
+      "title": "字符串解码",
+      "difficulty": "MEDIUM",
+      "tags": ["stack", "string"],
+      "statement": "给定一个编码字符串，其中形如 `k[content]` 的片段表示方括号内的内容恰好重复 `k` 次，`k` 保证为正整数。编码串中可能出现嵌套的方括号结构，也可能含有不在方括号内的字母。请还原出原始字符串。\n输入格式：一行，编码字符串 `s`，不带引号，只含数字、小写英文字母和 `[`、`]`，例如 `3[a]2[bc]`。\n输出格式：一行，解码后的字符串，直接打印内容，不加引号。",
+      "constraints": "- `1 <= s.length <= 10^4`\n- 方括号成对出现且配对合法，`k` 为正整数\n- 解码后的字符串长度不超过 `10^5`",
+      "examples": [
+        { "input": "3[a]2[bc]", "output": "aaabcbc" },
+        { "input": "3[a2[c]]", "output": "accaccacc" }
+      ],
+      "tests": [
+        { "input": "3[a]2[bc]", "visibility": "PUBLIC" },
+        { "input": "2[abc]3[cd]ef", "visibility": "HIDDEN" },
+        { "input": "10[a]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        Deque<Integer> counts = new ArrayDeque<>();\n        Deque<StringBuilder> strs = new ArrayDeque<>();\n        StringBuilder res = new StringBuilder();\n        int num = 0;\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c >= '0' && c <= '9') {\n                num = num * 10 + (c - '0');\n            } else if (c == '[') {\n                counts.push(num);\n                strs.push(res);\n                num = 0;\n                res = new StringBuilder();\n            } else if (c == ']') {\n                int k = counts.pop();\n                StringBuilder prev = strs.pop();\n                for (int j = 0; j < k; j++) prev.append(res);\n                res = prev;\n            } else {\n                res.append(c);\n            }\n        }\n        System.out.println(res.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "simplify-path",
+      "title": "简化路径",
+      "difficulty": "MEDIUM",
+      "tags": ["stack", "string"],
+      "statement": "给定一个 Unix 风格的绝对路径，返回它的规范形式。规则：路径以单个 `/` 开头，各级目录名之间用单个 `/` 分隔；`.` 表示当前目录，`..` 表示上级目录，两者都不出现在结果中；多个连续的 `/` 视为一个；除非结果就是根目录，否则结尾不带 `/`；`..` 不会越过根目录。\n输入格式：一行，字符串 `path`，不带引号，以 `/` 开头，只含英文字母、数字、`.`、`/` 和 `_`。\n输出格式：一行，规范路径，直接打印内容，不加引号。",
+      "constraints": "- `1 <= path.length <= 3000`\n- `path` 以 `/` 开头\n- `path` 只含英文字母、数字、`.`、`/` 和 `_`",
+      "examples": [
+        { "input": "/home/", "output": "/home" },
+        { "input": "/a/./b/../../c/", "output": "/c" }
+      ],
+      "tests": [
+        { "input": "/home/", "visibility": "PUBLIC" },
+        { "input": "/../", "visibility": "HIDDEN" },
+        { "input": "/a/./b/../../c/", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String path = br.readLine();\n        if (path == null) return;\n        List<String> st = new ArrayList<>();\n        for (String part : path.split(\"/\")) {\n            if (part.isEmpty() || part.equals(\".\")) continue;\n            if (part.equals(\"..\")) {\n                if (!st.isEmpty()) st.remove(st.size() - 1);\n            } else {\n                st.add(part);\n            }\n        }\n        StringBuilder sb = new StringBuilder();\n        for (String part : st) sb.append('/').append(part);\n        if (sb.length() == 0) sb.append('/');\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "daily-temperatures",
+      "title": "每日温度",
+      "difficulty": "MEDIUM",
+      "tags": ["stack", "array"],
+      "statement": "给定一个表示每天气温的整数数组 `temperatures`。对每一天，求出还需要等待多少天才会出现比它更高的气温；如果之后都不会出现更高的气温，则记为 `0`。\n输入格式：一行，整数数组，写成 `[73,74,75,71,69,72,76,73]` 的形式，元素之间用 `,` 分隔，整体用中括号括起来。\n输出格式：一行，整数数组，写成 `[1,1,4,2,1,1,0,0]` 的形式，元素之间不留空格。",
+      "constraints": "- `1 <= temperatures.length <= 10^5`\n- `30 <= temperatures[i] <= 100`",
+      "examples": [
+        { "input": "[73,74,75,71,69,72,76,73]", "output": "[1,1,4,2,1,1,0,0]" },
+        { "input": "[50,50,50]", "output": "[0,0,0]" }
+      ],
+      "tests": [
+        { "input": "[73,74,75,71,69,72,76,73]", "visibility": "PUBLIC" },
+        { "input": "[30,40,50,60]", "visibility": "HIDDEN" },
+        { "input": "[50,50,50]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        String body = line.trim();\n        if (body.startsWith(\"[\")) body = body.substring(1);\n        if (body.endsWith(\"]\")) body = body.substring(0, body.length() - 1);\n        body = body.trim();\n        int[] temps;\n        if (body.isEmpty()) {\n            temps = new int[0];\n        } else {\n            String[] parts = body.split(\",\");\n            temps = new int[parts.length];\n            for (int i = 0; i < parts.length; i++) temps[i] = Integer.parseInt(parts[i].trim());\n        }\n        int n = temps.length;\n        int[] res = new int[n];\n        Deque<Integer> st = new ArrayDeque<>();\n        for (int i = 0; i < n; i++) {\n            while (!st.isEmpty() && temps[i] > temps[st.peek()]) {\n                int j = st.pop();\n                res[j] = i - j;\n            }\n            st.push(i);\n        }\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < n; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(res[i]);\n        }\n        sb.append(']');\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "remove-k-digits",
+      "title": "移掉 K 位数字",
+      "difficulty": "MEDIUM",
+      "tags": ["stack", "greedy", "string"],
+      "statement": "给定一个以字符串形式给出的非负整数 `num` 和一个整数 `k`，从 `num` 中恰好删除 `k` 个数字，使剩下的数字按原有先后顺序组成的新整数尽可能小。输出这个最小整数：去掉前导零后直接打印；如果所有数字都被删除，则输出 `0`。\n输入格式：一行，`num;k`，`num` 是数字字符串，`k` 是十进制整数，两者之间用单个 `;` 分隔，例如 `1432219;3`。\n输出格式：一行，删除 `k` 个数字后能得到的最小整数，十进制表示，不含前导零。",
+      "constraints": "- `1 <= num.length <= 10^5`\n- `0 <= k <= num.length`\n- `num` 不含前导零，除非 `num` 本身就是 `0`",
+      "examples": [
+        { "input": "1432219;3", "output": "1219" },
+        { "input": "10200;1", "output": "200" }
+      ],
+      "tests": [
+        { "input": "1432219;3", "visibility": "PUBLIC" },
+        { "input": "10;2", "visibility": "HIDDEN" },
+        { "input": "10200;1", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        String num = line.substring(0, sep).trim();\n        int k = Integer.parseInt(line.substring(sep + 1).trim());\n        StringBuilder st = new StringBuilder();\n        int remove = k;\n        for (int i = 0; i < num.length(); i++) {\n            char c = num.charAt(i);\n            while (remove > 0 && st.length() > 0 && st.charAt(st.length() - 1) > c) {\n                st.deleteCharAt(st.length() - 1);\n                remove--;\n            }\n            st.append(c);\n        }\n        while (remove > 0 && st.length() > 0) {\n            st.deleteCharAt(st.length() - 1);\n            remove--;\n        }\n        int idx = 0;\n        while (idx < st.length() && st.charAt(idx) == '0') idx++;\n        String result = st.substring(idx);\n        if (result.isEmpty()) result = \"0\";\n        System.out.println(result);\n    }\n}\n"
+    },
+    {
+      "slug": "sliding-window-maximum",
+      "title": "滑动窗口最大值",
+      "difficulty": "MEDIUM",
+      "tags": ["queue", "sliding-window", "array"],
+      "statement": "给定整数数组 `nums` 和窗口大小 `k`。一个大小为 `k` 的窗口从数组最左端开始，每次整体右移一个位置，直到窗口的右端到达数组末尾。请按窗口从左到右的顺序，输出每个窗口中的最大值。\n输入格式：一行，`nums;k`，`nums` 写成 `[1,3,-1,-3,5,3,6,7]` 的形式（元素之间用 `,` 分隔，不许有空格），`k` 为十进制整数，两者之间用单个 `;` 分隔。\n输出格式：一行，整数数组，写成 `[3,3,5,5,6,7]` 的形式，元素之间不留空格。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `1 <= k <= nums.length`\n- `-10^4 <= nums[i] <= 10^4`",
+      "examples": [
+        { "input": "[1,3,-1,-3,5,3,6,7];3", "output": "[3,3,5,5,6,7]" },
+        { "input": "[7,7,7,7];2", "output": "[7,7,7]" }
+      ],
+      "tests": [
+        { "input": "[1,3,-1,-3,5,3,6,7];3", "visibility": "PUBLIC" },
+        { "input": "[1];1", "visibility": "HIDDEN" },
+        { "input": "[7,7,7,7];2", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        String body = line.substring(0, sep).trim();\n        int k = Integer.parseInt(line.substring(sep + 1).trim());\n        if (body.startsWith(\"[\")) body = body.substring(1);\n        if (body.endsWith(\"]\")) body = body.substring(0, body.length() - 1);\n        body = body.trim();\n        int[] nums;\n        if (body.isEmpty()) {\n            nums = new int[0];\n        } else {\n            String[] parts = body.split(\",\");\n            nums = new int[parts.length];\n            for (int i = 0; i < parts.length; i++) nums[i] = Integer.parseInt(parts[i].trim());\n        }\n        int n = nums.length;\n        Deque<Integer> dq = new ArrayDeque<>();\n        StringBuilder sb = new StringBuilder(\"[\");\n        boolean first = true;\n        for (int i = 0; i < n; i++) {\n            while (!dq.isEmpty() && nums[dq.peekLast()] <= nums[i]) dq.pollLast();\n            dq.addLast(i);\n            if (dq.peekFirst() <= i - k) dq.pollFirst();\n            if (i >= k - 1) {\n                if (!first) sb.append(',');\n                sb.append(nums[dq.peekFirst()]);\n                first = false;\n            }\n        }\n        sb.append(']');\n        System.out.println(sb.toString());\n    }\n}\n"
+    }
+  ]
+}

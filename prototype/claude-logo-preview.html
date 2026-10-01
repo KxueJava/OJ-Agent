@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodeAgent OJ · Claude mark preview</title>
+  <style>
+    :root {
+      --paper: #f3f1eb;
+      --rail: #e9e7df;
+      --ink: #242827;
+      --muted: #7e827b;
+      --line: #d7d4cc;
+      --accent: #d9773a;
+      --accent-soft: #f2d4bd;
+      --green: #3f866a;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+    }
+
+    .preview {
+      display: grid;
+      grid-template-columns: 304px minmax(0, 1fr);
+      min-height: 100dvh;
+    }
+
+    .rail {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      padding: 42px 28px 28px;
+      background: var(--rail);
+      border-right: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    /* The mark is a warm, abstract Claude-inspired spark built from six petals. */
+    .claude-mark {
+      position: relative;
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      flex: 0 0 48px;
+      border: 1px solid #303b4a;
+      border-radius: 14px 14px 14px 4px;
+      background: #202936;
+      box-shadow: 5px 5px 0 var(--accent-soft);
+      transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s cubic-bezier(.16,1,.3,1);
+    }
+
+    .claude-mark svg { width: 36px; height: 25px; display: block; shape-rendering: crispEdges; }
+
+    .brand:hover .claude-mark {
+      transform: translateY(-3px) rotate(-4deg);
+      box-shadow: 8px 8px 0 var(--accent-soft);
+    }
+
+    .brand-copy strong { display: block; font-size: 17px; letter-spacing: -.03em; }
+    .brand-copy small { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+
+    .nav { display: grid; gap: 5px; margin-top: 82px; }
+    .nav a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 41px;
+      padding: 0 12px;
+      border-left: 2px solid transparent;
+      color: #70756e;
+      font-size: 13px;
+      text-decoration: none;
+      transition: background .25s ease, color .25s ease, transform .25s ease;
+    }
+    .nav a:hover { color: var(--ink); background: #dfddd5; transform: translateX(2px); }
+    .nav a.active { border-left-color: var(--accent); color: var(--ink); background: #dfddd5; font-weight: 700; }
+    .nav small { color: #9a9b94; font: 11px Consolas, monospace; }
+
+    .rail-note { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .dot { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--green); animation: breathe 2.4s ease-in-out infinite; }
+
+    .content { width: min(1050px, 100%); padding: 54px clamp(28px, 6vw, 88px); }
+    .eyebrow { margin: 0 0 11px; color: var(--muted); font: 600 10px Consolas, monospace; letter-spacing: .11em; text-transform: uppercase; }
+    h1 { max-width: 650px; margin: 0; font-size: clamp(30px, 4vw, 54px); line-height: 1.02; letter-spacing: -.055em; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 28px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+    .intro p:not(.eyebrow) { max-width: 330px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .sample-zone { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(230px, .7fr); gap: 54px; padding-top: 45px; }
+    .section-title { margin: 0 0 17px; font-size: 19px; letter-spacing: -.03em; }
+    .logo-study { display: grid; grid-template-columns: 132px 1fr; gap: 24px; align-items: center; padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .study-mark { display: grid; width: 116px; height: 116px; place-items: center; border: 1px solid #303b4a; border-radius: 32px 32px 32px 8px; background: #202936; box-shadow: 10px 10px 0 var(--accent-soft); }
+    .study-mark svg { width: 78px; height: 54px; display: block; shape-rendering: crispEdges; }
+    .logo-copy h3 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.04em; }
+    .logo-copy p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+    .spec-list { margin: 0; border-top: 1px solid var(--line); }
+    .spec { display: flex; justify-content: space-between; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .spec b { color: var(--ink); font-weight: 650; }
+    .swatch { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 50%; vertical-align: -1px; background: var(--accent); }
+
+    .preview-note { margin-top: 42px; padding: 17px 0 0; border-top: 1px solid var(--line); color: #777c74; font-size: 11px; line-height: 1.7; }
+    @keyframes breathe { 0%, 100% { opacity: .45; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.1); } }
+    @media (max-width: 760px) {
+      .preview { display: block; }
+      .rail { min-height: auto; padding: 24px 20px; }
+      .nav { grid-template-columns: repeat(3, 1fr); margin-top: 28px; }
+      .rail-note { display: none; }
+      .content { padding: 42px 20px; }
+      .intro, .sample-zone, .logo-study { grid-template-columns: 1fr; display: grid; }
+      .intro { gap: 20px; }
+      .sample-zone { gap: 36px; }
+      .study-mark { width: 94px; height: 94px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="preview">
+    <aside class="rail">
+      <a class="brand" href="#top">
+        <span class="claude-mark" aria-hidden="true"><svg viewBox="0 0 104 64"><path fill="#df7657" d="M16 8h72v48H16zM8 20h88v24H8zM0 24h104v16H0zM28 56h8v8h-8zM44 56h8v8h-8zM68 56h8v8h-8zM84 56h8v8h-8z"/><path fill="#202936" d="M34 24h8v12h-8zM62 24h8v12h-8z"/></svg></span>
+        <span class="brand-copy"><strong>CodeAgent</strong><small>OJ / JAVA 21</small></span>
+      </a>
+      <nav class="nav" aria-label="主导航">
+        <a class="active" href="#overview">概览 <small>01</small></a>
+        <a href="#catalog">题库 <small>31</small></a>
+        <a href="#mistakes">错题本 <small>—</small></a>
+      </nav>
+      <p class="rail-note"><span class="dot"></span>判题服务在线<br>本页是 Logo 视觉预览，不会改动项目。</p>
+    </aside>
+
+    <section class="content" id="top">
+      <header class="intro" id="overview">
+        <div><p class="eyebrow">MARK STUDY / 01</p><h1>把左上角的 CA，换成一个更有温度的“小克”。</h1></div>
+        <p>用一枚橙色、带轻微纸张质感的抽象符号，保留 CodeAgent 的工具属性，同时让入口更有辨识度。</p>
+      </header>
+
+      <section class="sample-zone" id="catalog">
+        <div>
+          <p class="eyebrow">DIRECTION</p>
+          <h2 class="section-title">推荐方案：橙色几何标记</h2>
+          <div class="logo-study">
+            <div class="study-mark" aria-hidden="true"><svg viewBox="0 0 104 64" role="img" aria-label="Claude-inspired orange mark"><path fill="#df7657" d="M16 8h72v48H16zM8 20h88v24H8zM0 24h104v16H0zM28 56h8v8h-8zM44 56h8v8h-8zM68 56h8v8h-8zM84 56h8v8h-8z"/><path fill="#202936" d="M34 24h8v12h-8zM62 24h8v12h-8z"/></svg></div>
+            <div class="logo-copy"><h3>Claude-inspired mark</h3><p>不直接复制品牌字标，只借鉴“小克”清晰、友好的识别感。深色底与橙色几何主体让它在侧栏中保持高辨识度。</p></div>
+          </div>
+          <p class="preview-note">交互：悬停左侧 Logo 时，标记会向上轻移并露出第二层暖橙阴影；页面保持无渐变、无霓虹、单一强调色。</p>
+        </div>
+        <div>
+          <p class="eyebrow">TOKENS</p>
+          <div class="spec-list">
+            <div class="spec"><span>强调色</span><b><i class="swatch"></i>#D9773A</b></div>
+            <div class="spec"><span>背景</span><b>#F3F1EB</b></div>
+            <div class="spec"><span>形状</span><b>14 / 14 / 14 / 4</b></div>
+            <div class="spec"><span>阴影</span><b>暖橙偏移 5px</b></div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

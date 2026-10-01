@@ -1,0 +1,88 @@
+spring:
+  application:
+    name: codeagent-oj-server
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:codeagent_oj_local}?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:root}
+    hikari:
+      # 对端关闭连接时 Hikari 会刷 "No operations allowed after connection closed"；主动回收 + 心跳比默认值稳
+      max-lifetime: ${MYSQL_MAX_LIFETIME_MS:600000}
+      keepalive-time: ${MYSQL_KEEPALIVE_MS:300000}
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      # Redis 3.x uses password-only AUTH; set REDIS_USERNAME only for Redis 6 ACL deployments.
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:123456}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+  task:
+    scheduling:
+      pool:
+        size: 2
+  ai:
+    openai:
+      # 占位默认值：Spring AI 的 OpenAI 自动配置要求 api-key 非空，空值会让应用启动即失败
+      # （OpenAIAutoConfigurationUtil: "OpenAI API key must be set"）。
+      # 未配置 DEEPSEEK_API_KEY 时用 "disabled" 让 OpenAiChatModel bean 能创建，
+      # DeepSeekClient.configured() 会把该占位值判定为“未配置”并走规则兜底文案。
+      api-key: ${DEEPSEEK_API_KEY:disabled}
+      base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+      chat:
+        options:
+          model: ${DEEPSEEK_MODEL:deepseek-chat}
+          temperature: 0.2
+          max-tokens: 900
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  global-config:
+    db-config:
+      id-type: assign_id
+
+app:
+  judge:
+    queue: ${JUDGE_QUEUE:oj.submissions}
+    poll-ms: ${JUDGE_OUTBOX_POLL_MS:500}
+  security:
+    jwt-secret: ${JWT_SECRET:change-this-development-secret-key-at-least-32-bytes}
+    access-token-minutes: ${JWT_ACCESS_TOKEN_MINUTES:30}
+    refresh-token-days: ${JWT_REFRESH_TOKEN_DAYS:30}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:3001}
+  agent:
+    memory:
+      max-messages: ${AGENT_MEMORY_MAX_MESSAGES:20}
+      max-chars: ${AGENT_MEMORY_MAX_CHARS:12000}
+    auto-diagnose:
+      enabled: ${AGENT_AUTO_DIAGNOSE:true}
+      poll-ms: ${AGENT_AUTO_DIAGNOSE_POLL_MS:3000}
+      timeout-seconds: ${AGENT_AUTO_DIAGNOSE_TIMEOUT_SECONDS:15}
+      # 冷却只用来吸收连点/重复提交；真正的成本闸是每用户每小时的额度
+      cooldown-seconds: ${AGENT_AUTO_DIAGNOSE_COOLDOWN_SECONDS:20}
+      max-per-hour: ${AGENT_AUTO_DIAGNOSE_MAX_PER_HOUR:20}
+      lookback-minutes: ${AGENT_AUTO_DIAGNOSE_LOOKBACK_MINUTES:30}
+      max-per-scan: ${AGENT_AUTO_DIAGNOSE_MAX_PER_SCAN:3}

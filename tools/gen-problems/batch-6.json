@@ -1,0 +1,170 @@
+{
+  "batch": 6,
+  "problems": [
+    {
+      "slug": "matrix-diagonal-sum",
+      "title": "矩阵对角线元素和",
+      "difficulty": "EASY",
+      "tags": ["matrix", "array"],
+      "statement": "输入格式：一行，一个 n x n 的方阵，写成 `[[1,2,3],[4,5,6],[7,8,9]]` 的形式，元素之间无空格。\n输出格式：一行，一个整数，表示主对角线（左上到右下）与副对角线（右上到左下）上所有元素之和；两条对角线交叉处的元素只计算一次。",
+      "constraints": "- `1 <= n <= 1000`\n- `-10^5 <= matrix[i][j] <= 10^5`",
+      "examples": [{ "input": "[[1,2,3],[4,5,6],[7,8,9]]", "output": "25" }],
+      "tests": [
+        { "input": "[[1,2,3],[4,5,6],[7,8,9]]", "visibility": "PUBLIC" },
+        { "input": "[[5]]", "visibility": "HIDDEN" },
+        { "input": "[[1,2],[3,4]]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[][] a = parseMatrix(line);\n        int n = a.length;\n        if (n == 0) {\n            System.out.println(0);\n            return;\n        }\n        long sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += a[i][i];\n            sum += a[i][n - 1 - i];\n        }\n        if (n % 2 == 1) sum -= a[n / 2][n / 2];\n        System.out.println(sum);\n    }\n\n    static int[][] parseMatrix(String s) {\n        List<int[]> rows = new ArrayList<>();\n        List<Integer> cur = new ArrayList<>();\n        int depth = 0;\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '[') {\n                depth++;\n                if (depth == 2) cur = new ArrayList<>();\n                i++;\n            } else if (c == ']') {\n                if (depth == 2) {\n                    int[] row = new int[cur.size()];\n                    for (int j = 0; j < row.length; j++) row[j] = cur.get(j);\n                    rows.add(row);\n                }\n                depth--;\n                i++;\n            } else if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                cur.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[][] res = new int[rows.size()][];\n        for (int j = 0; j < res.length; j++) res[j] = rows.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "transpose-matrix",
+      "title": "矩阵转置",
+      "difficulty": "EASY",
+      "tags": ["matrix", "simulation"],
+      "statement": "输入格式：一行，一个 m x n 的矩阵，写成 `[[1,2,3],[4,5,6]]` 的形式，元素之间无空格。\n输出格式：一行，转置后的 n x m 矩阵，写成 `[[1,4],[2,5],[3,6]]` 的形式，元素之间无空格，行与行之间用逗号分隔。",
+      "constraints": "- `1 <= m, n <= 500`\n- `-10^5 <= matrix[i][j] <= 10^5`",
+      "examples": [{ "input": "[[1,2,3],[4,5,6]]", "output": "[[1,4],[2,5],[3,6]]" }],
+      "tests": [
+        { "input": "[[1,2,3],[4,5,6]]", "visibility": "PUBLIC" },
+        { "input": "[[7]]", "visibility": "HIDDEN" },
+        { "input": "[[1,2],[3,4],[5,6]]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[][] a = parseMatrix(line);\n        int r = a.length;\n        if (r == 0) return;\n        int c = 0;\n        for (int[] row : a) c = Math.max(c, row.length);\n        StringBuilder out = new StringBuilder();\n        out.append('[');\n        for (int j = 0; j < c; j++) {\n            if (j > 0) out.append(',');\n            out.append('[');\n            for (int i = 0; i < r; i++) {\n                if (i > 0) out.append(',');\n                out.append(j < a[i].length ? a[i][j] : 0);\n            }\n            out.append(']');\n        }\n        out.append(']');\n        System.out.println(out.toString());\n    }\n\n    static int[][] parseMatrix(String s) {\n        List<int[]> rows = new ArrayList<>();\n        List<Integer> cur = new ArrayList<>();\n        int depth = 0;\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '[') {\n                depth++;\n                if (depth == 2) cur = new ArrayList<>();\n                i++;\n            } else if (c == ']') {\n                if (depth == 2) {\n                    int[] row = new int[cur.size()];\n                    for (int j = 0; j < row.length; j++) row[j] = cur.get(j);\n                    rows.add(row);\n                }\n                depth--;\n                i++;\n            } else if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                cur.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[][] res = new int[rows.size()][];\n        for (int j = 0; j < res.length; j++) res[j] = rows.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "count-elements-with-maximum-frequency",
+      "title": "出现次数最多的元素计数",
+      "difficulty": "EASY",
+      "tags": ["counting", "array", "hash-table"],
+      "statement": "统计数组中每个元素的出现次数，并找出最大的出现次数，输出所有出现次数等于该最大值的元素的总出现次数。\n输入格式：一行，一个整数数组，写成 `[1,1,2,2,3,3]` 的形式，元素之间无空格。\n输出格式：一行，一个整数，表示出现次数等于最大出现次数的那些元素的出现次数之和。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `-10^9 <= nums[i] <= 10^9`",
+      "examples": [{ "input": "[1,1,2,2,3,3]", "output": "6" }],
+      "tests": [
+        { "input": "[1,1,2,2,3,3]", "visibility": "PUBLIC" },
+        { "input": "[5]", "visibility": "HIDDEN" },
+        { "input": "[1,1,1,2,2,2,3]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] a = parseInts(line);\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int v : a) freq.merge(v, 1, Integer::sum);\n        int max = 0;\n        for (int f : freq.values()) if (f > max) max = f;\n        int count = 0;\n        for (int f : freq.values()) if (f == max) count++;\n        System.out.println((long) max * count);\n    }\n\n    static int[] parseInts(String s) {\n        List<Integer> list = new ArrayList<>();\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                list.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[] res = new int[list.size()];\n        for (int j = 0; j < res.length; j++) res[j] = list.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "robot-return-to-origin",
+      "title": "机器人是否回到原点",
+      "difficulty": "EASY",
+      "tags": ["simulation", "string"],
+      "statement": "机器人一开始站在原点 (0,0)，按给定顺序执行每一步移动：`U` 向上、`D` 向下、`L` 向左、`R` 向右，每次移动一个单位。\n输入格式：一行，一个只由字符 `U`、`D`、`L`、`R` 组成的字符串，例如 `UD` 或 `UUDDLRLR`。\n输出格式：一行，如果机器人执行完所有移动后回到原点，输出 `true`，否则输出 `false`。",
+      "constraints": "- `1 <= moves.length <= 10^5`\n- `moves` 中只包含字符 `U`、`D`、`L`、`R`",
+      "examples": [{ "input": "UD", "output": "true" }],
+      "tests": [
+        { "input": "UD", "visibility": "PUBLIC" },
+        { "input": "LL", "visibility": "HIDDEN" },
+        { "input": "UUDDLRLR", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        String s = line.trim();\n        int x = 0;\n        int y = 0;\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == 'U') y++;\n            else if (c == 'D') y--;\n            else if (c == 'L') x--;\n            else if (c == 'R') x++;\n        }\n        System.out.println(x == 0 && y == 0);\n    }\n}\n"
+    },
+    {
+      "slug": "last-stone-weight",
+      "title": "最后一块石头的重量",
+      "difficulty": "EASY",
+      "tags": ["heap", "array"],
+      "statement": "有一堆石头，每块石头有一个正整数重量。每一轮选出两块最重的石头并粉碎它们：如果两块重量相同，则两块都消失；如果重量不同，则留下重量之差的那块石头。重复直到最多剩下一块石头。\n输入格式：一行，一个整数数组，写成 `[2,7,4,1,8,1]` 的形式，元素之间无空格。\n输出格式：一行，一个整数，表示最后剩下石头的重量；如果所有石头都消失，输出 `0`。",
+      "constraints": "- `1 <= stones.length <= 10^5`\n- `1 <= stones[i] <= 10^4`",
+      "examples": [{ "input": "[2,7,4,1,8,1]", "output": "1" }],
+      "tests": [
+        { "input": "[2,7,4,1,8,1]", "visibility": "PUBLIC" },
+        { "input": "[3,3]", "visibility": "HIDDEN" },
+        { "input": "[2,2,2]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] a = parseInts(line);\n        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());\n        for (int v : a) pq.add(v);\n        while (pq.size() > 1) {\n            int x = pq.poll();\n            int y = pq.poll();\n            if (x != y) pq.add(x - y);\n        }\n        System.out.println(pq.isEmpty() ? 0 : pq.peek());\n    }\n\n    static int[] parseInts(String s) {\n        List<Integer> list = new ArrayList<>();\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                list.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[] res = new int[list.size()];\n        for (int j = 0; j < res.length; j++) res[j] = list.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "spiral-matrix",
+      "title": "螺旋顺序读取矩阵",
+      "difficulty": "MEDIUM",
+      "tags": ["matrix", "simulation", "array"],
+      "statement": "从矩阵左上角出发，按顺时针方向沿外圈向内逐层读取所有元素。\n输入格式：一行，一个 m x n 的矩阵，写成 `[[1,2,3],[4,5,6],[7,8,9]]` 的形式，元素之间无空格。\n输出格式：一行，按螺旋顺序读到的所有元素，写成 `[1,2,3]` 的形式，元素之间无空格，按读取顺序排列。",
+      "constraints": "- `1 <= m, n <= 300`\n- `m * n <= 10^5`\n- `-10^4 <= matrix[i][j] <= 10^4`",
+      "examples": [{ "input": "[[1,2,3],[4,5,6],[7,8,9]]", "output": "[1,2,3,6,9,8,7,4,5]" }],
+      "tests": [
+        { "input": "[[1,2,3],[4,5,6],[7,8,9]]", "visibility": "PUBLIC" },
+        { "input": "[[1]]", "visibility": "HIDDEN" },
+        { "input": "[[1,2],[3,4]]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[][] a = parseMatrix(line);\n        int m = a.length;\n        if (m == 0) return;\n        int n = a[0].length;\n        List<Integer> res = new ArrayList<>();\n        int top = 0;\n        int bottom = m - 1;\n        int left = 0;\n        int right = n - 1;\n        while (top <= bottom && left <= right) {\n            for (int j = left; j <= right; j++) res.add(a[top][j]);\n            top++;\n            for (int i = top; i <= bottom; i++) res.add(a[i][right]);\n            right--;\n            if (top <= bottom) {\n                for (int j = right; j >= left; j--) res.add(a[bottom][j]);\n                bottom--;\n            }\n            if (left <= right) {\n                for (int i = bottom; i >= top; i--) res.add(a[i][left]);\n                left++;\n            }\n        }\n        StringBuilder out = new StringBuilder();\n        out.append('[');\n        for (int i = 0; i < res.size(); i++) {\n            if (i > 0) out.append(',');\n            out.append(res.get(i));\n        }\n        out.append(']');\n        System.out.println(out.toString());\n    }\n\n    static int[][] parseMatrix(String s) {\n        List<int[]> rows = new ArrayList<>();\n        List<Integer> cur = new ArrayList<>();\n        int depth = 0;\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '[') {\n                depth++;\n                if (depth == 2) cur = new ArrayList<>();\n                i++;\n            } else if (c == ']') {\n                if (depth == 2) {\n                    int[] row = new int[cur.size()];\n                    for (int j = 0; j < row.length; j++) row[j] = cur.get(j);\n                    rows.add(row);\n                }\n                depth--;\n                i++;\n            } else if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                cur.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[][] res = new int[rows.size()][];\n        for (int j = 0; j < res.length; j++) res[j] = rows.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "count-and-say",
+      "title": "外观数列",
+      "difficulty": "MEDIUM",
+      "tags": ["string", "simulation"],
+      "statement": "外观数列的第一项是 `1`，此后每一项都是对前一项的读数描述：把前一项中连续相同的数字按「个数 + 数字」的形式依次写出，再把所有片段拼接起来。例如前一项是 `1211` 时，读作 `1` 个 `1`、`1` 个 `2`、`2` 个 `1`，得到下一项 `111221`。\n输入格式：一行，一个整数 `n`。\n输出格式：一行，外观数列的第 `n` 项，直接输出该数字串，不加引号。",
+      "constraints": "- `1 <= n <= 30`\n- 输出串的长度在 `n = 30` 时不超过 `5000`",
+      "examples": [{ "input": "4", "output": "1211" }],
+      "tests": [
+        { "input": "4", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "6", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int n = Integer.parseInt(line.trim());\n        String s = \"1\";\n        for (int k = 1; k < n; k++) {\n            StringBuilder sb = new StringBuilder();\n            int i = 0;\n            while (i < s.length()) {\n                int j = i;\n                while (j < s.length() && s.charAt(j) == s.charAt(i)) j++;\n                sb.append(j - i).append(s.charAt(i));\n                i = j;\n            }\n            s = sb.toString();\n        }\n        System.out.println(s);\n    }\n}\n"
+    },
+    {
+      "slug": "kth-largest-element-in-an-array",
+      "title": "数组中第 k 大的元素",
+      "difficulty": "MEDIUM",
+      "tags": ["heap", "sorting", "array"],
+      "statement": "输入格式：一行，形如 `[3,2,1,5,6,4];2`，分号前是一个整数数组（写成 `[3,2,1,5,6,4]`，元素之间无空格），分号后是整数 `k`。\n输出格式：一行，一个整数，表示把数组按从大到小排序后第 `k` 个位置上的元素（重复元素按出现次数分别计数）。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `1 <= k <= nums.length`\n- `-10^4 <= nums[i] <= 10^4`",
+      "examples": [{ "input": "[3,2,1,5,6,4];2", "output": "5" }],
+      "tests": [
+        { "input": "[3,2,1,5,6,4];2", "visibility": "PUBLIC" },
+        { "input": "[1];1", "visibility": "HIDDEN" },
+        { "input": "[3,2,3,1,2,4,5,5,6];4", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int sep = line.lastIndexOf(';');\n        int[] a = parseInts(line.substring(0, sep));\n        int k = Integer.parseInt(line.substring(sep + 1).trim());\n        Arrays.sort(a);\n        System.out.println(a[a.length - k]);\n    }\n\n    static int[] parseInts(String s) {\n        List<Integer> list = new ArrayList<>();\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                list.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[] res = new int[list.size()];\n        for (int j = 0; j < res.length; j++) res[j] = list.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "top-k-frequent-elements",
+      "title": "出现频率最高的 k 个元素",
+      "difficulty": "MEDIUM",
+      "tags": ["counting", "heap", "hash-table"],
+      "statement": "输入格式：一行，形如 `[1,1,1,2,2,3];2`，分号前是一个整数数组（写成 `[1,1,1,2,2,3]`，元素之间无空格），分号后是整数 `k`。\n输出格式：一行，出现频率最高的 `k` 个不同元素，写成 `[1,2]` 的形式，元素之间无空格；先按出现次数从高到低排列，出现次数相同时按元素数值从小到大排列。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `1 <= k <= 数组中不同元素的个数`\n- `-10^9 <= nums[i] <= 10^9`",
+      "examples": [{ "input": "[1,1,1,2,2,3];2", "output": "[1,2]" }],
+      "tests": [
+        { "input": "[1,1,1,2,2,3];2", "visibility": "PUBLIC" },
+        { "input": "[7,7,7];1", "visibility": "HIDDEN" },
+        { "input": "[5,5,4,4,3];2", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int sep = line.lastIndexOf(';');\n        int[] a = parseInts(line.substring(0, sep));\n        int k = Integer.parseInt(line.substring(sep + 1).trim());\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int v : a) freq.merge(v, 1, Integer::sum);\n        List<Integer> values = new ArrayList<>(freq.keySet());\n        values.sort((p, q) -> {\n            int fp = freq.get(p);\n            int fq = freq.get(q);\n            if (fp != fq) return Integer.compare(fq, fp);\n            return Integer.compare(p, q);\n        });\n        StringBuilder out = new StringBuilder();\n        out.append('[');\n        for (int i = 0; i < k; i++) {\n            if (i > 0) out.append(',');\n            out.append(values.get(i));\n        }\n        out.append(']');\n        System.out.println(out.toString());\n    }\n\n    static int[] parseInts(String s) {\n        List<Integer> list = new ArrayList<>();\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                list.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[] res = new int[list.size()];\n        for (int j = 0; j < res.length; j++) res[j] = list.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "reduce-array-size-to-the-half",
+      "title": "将数组大小减半的最少集合",
+      "difficulty": "MEDIUM",
+      "tags": ["counting", "heap", "sorting"],
+      "statement": "每次操作可以选定一个整数，并删除数组中所有等于该整数的元素。\n输入格式：一行，一个整数数组，写成 `[3,3,3,3,5,5,5,2,2,7]` 的形式，元素之间无空格。\n输出格式：一行，一个整数，表示至少删除数组中一半元素（数组长度为奇数时按向上取整）所需选定整数的最少个数。",
+      "constraints": "- `1 <= arr.length <= 10^5`\n- `-10^5 <= arr[i] <= 10^5`",
+      "examples": [{ "input": "[3,3,3,3,5,5,5,2,2,7]", "output": "2" }],
+      "tests": [
+        { "input": "[3,3,3,3,5,5,5,2,2,7]", "visibility": "PUBLIC" },
+        { "input": "[1]", "visibility": "HIDDEN" },
+        { "input": "[7,7,7,7]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] a = parseInts(line);\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int v : a) freq.merge(v, 1, Integer::sum);\n        List<Integer> counts = new ArrayList<>(freq.values());\n        counts.sort((x, y) -> Integer.compare(y, x));\n        int removed = 0;\n        int used = 0;\n        for (int c : counts) {\n            removed += c;\n            used++;\n            if (removed * 2 >= a.length) break;\n        }\n        System.out.println(used);\n    }\n\n    static int[] parseInts(String s) {\n        List<Integer> list = new ArrayList<>();\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                list.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[] res = new int[list.size()];\n        for (int j = 0; j < res.length; j++) res[j] = list.get(j);\n        return res;\n    }\n}\n"
+    },
+    {
+      "slug": "merge-stones-minimum-total-cost",
+      "title": "合并石子的最小总代价",
+      "difficulty": "HARD",
+      "tags": ["heap", "greedy"],
+      "statement": "有 n 堆石子，每次可以把任意两堆合并成一堆，本次合并的代价等于这两堆石子数量之和，把 n 堆合并成一堆的总代价是所有合并代价之累加。\n输入格式：一行，一个整数数组，写成 `[1,2,3,4]` 的形式，元素之间无空格，第 i 个数表示第 i 堆石子的数量。\n输出格式：一行，一个整数，表示完成合并所需的最小总代价；当只有一堆石子时输出 `0`。",
+      "constraints": "- `1 <= stones.length <= 10^5`\n- `1 <= stones[i] <= 10^9`\n- 答案可能超过 `2^31 - 1`",
+      "examples": [{ "input": "[1,2,3,4]", "output": "19" }],
+      "tests": [
+        { "input": "[1,2,3,4]", "visibility": "PUBLIC" },
+        { "input": "[5]", "visibility": "HIDDEN" },
+        { "input": "[1000000000,1000000000,1000000000]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] a = parseInts(line);\n        PriorityQueue<Long> pq = new PriorityQueue<>();\n        for (int v : a) pq.add((long) v);\n        long total = 0;\n        while (pq.size() > 1) {\n            long x = pq.poll();\n            long y = pq.poll();\n            long sum = x + y;\n            total += sum;\n            pq.add(sum);\n        }\n        System.out.println(total);\n    }\n\n    static int[] parseInts(String s) {\n        List<Integer> list = new ArrayList<>();\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            if (c == '-' || (c >= '0' && c <= '9')) {\n                int sign = 1;\n                if (c == '-') {\n                    sign = -1;\n                    i++;\n                }\n                long val = 0;\n                while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {\n                    val = val * 10 + (s.charAt(i) - '0');\n                    i++;\n                }\n                list.add((int) (sign * val));\n            } else {\n                i++;\n            }\n        }\n        int[] res = new int[list.size()];\n        for (int j = 0; j < res.length; j++) res[j] = list.get(j);\n        return res;\n    }\n}\n"
+    }
+  ]
+}

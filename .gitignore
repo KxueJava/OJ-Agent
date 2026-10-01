@@ -1,0 +1,18 @@
+.idea/
+.vscode/
+*.iml
+target/
+backend/**/target/
+node_modules/
+.next/
+frontend/.env.local
+.env
+# 依赖缓存与构建产物（不要提交）
+.m2/
+*.class
+uploads/
+*.log
+# 工具脚本的临时产物（批次数据与生成器本身要提交）
+tools/**/work/
+tools/gen-problems/*.txt
+tools/*.txt

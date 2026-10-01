@@ -1,0 +1,185 @@
+{
+  "batch": 1,
+  "problems": [
+    {
+      "slug": "remove-element",
+      "title": "移除元素",
+      "difficulty": "EASY",
+      "tags": ["array", "two-pointers"],
+      "statement": "给定一个整数数组 `nums` 和一个整数 `val`，请原地移除所有数值等于 `val` 的元素，并返回移除后数组中剩余元素的个数。\n输入格式：一行，数组 `nums` 与整数 `val`，两者之间用单个 `;` 分隔；数组写成 `[3,2,2,3]` 形式（元素之间无空格），例如 `[3,2,2,3];3`。\n输出格式：一行，一个十进制整数，表示移除 `val` 后数组中剩余元素的个数。",
+      "constraints": "- `0 <= nums.length <= 1000`\n- `-10^4 <= nums[i] <= 10^4`\n- `-10^4 <= val <= 10^4`",
+      "examples": [{ "input": "[3,2,2,3];3", "output": "2" }],
+      "tests": [
+        { "input": "[3,2,2,3];3", "visibility": "PUBLIC" },
+        { "input": "[0,1,2,2,3,0,4,2];2", "visibility": "HIDDEN" },
+        { "input": "[];5", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        int[] nums = parseIntArray(line.substring(0, sep));\n        int val = Integer.parseInt(line.substring(sep + 1).trim());\n        int k = 0;\n        for (int x : nums) {\n            if (x != val) k++;\n        }\n        System.out.println(k);\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n}\n"
+    },
+    {
+      "slug": "remove-duplicates-from-sorted-array",
+      "title": "删除有序数组中的重复项",
+      "difficulty": "EASY",
+      "tags": ["array", "two-pointers"],
+      "statement": "给定一个按非递减顺序排列的整数数组 `nums`，请原地删除重复出现的元素，使每个元素只出现一次，并返回删除后数组的新长度 `k`。\n输入格式：一行，一个数组 `nums`，写成 `[1,1,2]` 形式（元素之间无空格）。\n输出格式：一行，一个十进制整数，表示去重后数组中元素的个数 `k`。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `-10^4 <= nums[i] <= 10^4`\n- `nums` 按非递减顺序排列",
+      "examples": [{ "input": "[1,1,2]", "output": "2" }],
+      "tests": [
+        { "input": "[0,0,1,1,1,2,2,3,3,4]", "visibility": "PUBLIC" },
+        { "input": "[1,1]", "visibility": "HIDDEN" },
+        { "input": "[-3,-1,-1,0,0,0,2]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        int k = 0;\n        for (int i = 0; i < nums.length; i++) {\n            if (i == 0 || nums[i] != nums[i - 1]) k++;\n        }\n        System.out.println(k);\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n}\n"
+    },
+    {
+      "slug": "squares-of-a-sorted-array",
+      "title": "有序数组的平方",
+      "difficulty": "EASY",
+      "tags": ["array", "two-pointers"],
+      "statement": "给定一个按非递减顺序排列的整数数组 `nums`，返回每个元素的平方组成的新数组，要求新数组同样按非递减顺序排列。\n输入格式：一行，一个数组 `nums`，写成 `[-4,-1,0,3,10]` 形式（元素之间无空格）。\n输出格式：一行，平方后按非递减顺序排列的数组，写成 `[0,1,9]` 形式（元素之间无空格）。",
+      "constraints": "- `1 <= nums.length <= 10^4`\n- `-10^4 <= nums[i] <= 10^4`\n- `nums` 按非递减顺序排列",
+      "examples": [{ "input": "[-4,-1,0,3,10]", "output": "[0,1,9,16,100]" }],
+      "tests": [
+        { "input": "[-4,-1,0,3,10]", "visibility": "PUBLIC" },
+        { "input": "[-7,-3,2,3,11]", "visibility": "HIDDEN" },
+        { "input": "[-5]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        int n = nums.length;\n        int[] res = new int[n];\n        int l = 0, r = n - 1;\n        for (int i = n - 1; i >= 0; i--) {\n            int a = nums[l] * nums[l];\n            int b = nums[r] * nums[r];\n            if (a > b) {\n                res[i] = a;\n                l++;\n            } else {\n                res[i] = b;\n                r--;\n            }\n        }\n        System.out.println(arrayToString(res));\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n\n    static String arrayToString(int[] a) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < a.length; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(a[i]);\n        }\n        return sb.append(']').toString();\n    }\n}\n"
+    },
+    {
+      "slug": "running-sum-of-1d-array",
+      "title": "一维数组的动态和",
+      "difficulty": "EASY",
+      "tags": ["array", "prefix-sum"],
+      "statement": "给定一个整数数组 `nums`，返回它的动态和数组 `runningSum`，其中 `runningSum[i]` 等于 `nums[0]` 到 `nums[i]` 所有元素之和。\n输入格式：一行，一个数组 `nums`，写成 `[1,2,3,4]` 形式（元素之间无空格）。\n输出格式：一行，前缀和数组，写成 `[1,3,6,10]` 形式（元素之间无空格）。",
+      "constraints": "- `0 <= nums.length <= 1000`\n- `-10^6 <= nums[i] <= 10^6`\n- 任意前缀和的绝对值不超过 `10^9`",
+      "examples": [{ "input": "[1,2,3,4]", "output": "[1,3,6,10]" }],
+      "tests": [
+        { "input": "[1,2,3,4]", "visibility": "PUBLIC" },
+        { "input": "[3,1,2,10,1]", "visibility": "HIDDEN" },
+        { "input": "[-5,5,-5]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        long[] res = new long[nums.length];\n        long sum = 0;\n        for (int i = 0; i < nums.length; i++) {\n            sum += nums[i];\n            res[i] = sum;\n        }\n        System.out.println(arrayToString(res));\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n\n    static String arrayToString(long[] a) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < a.length; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(a[i]);\n        }\n        return sb.append(']').toString();\n    }\n}\n"
+    },
+    {
+      "slug": "find-pivot-index",
+      "title": "寻找数组的中心下标",
+      "difficulty": "EASY",
+      "tags": ["array", "prefix-sum"],
+      "statement": "给定一个整数数组 `nums`，请找出最左侧的「中心下标」：该下标左侧所有元素之和等于右侧所有元素之和。若中心下标位于数组最左端，则左侧和为 0；位于最右端则右侧和为 0。\n输入格式：一行，一个数组 `nums`，写成 `[1,7,3,6,5,6]` 形式（元素之间无空格）。\n输出格式：一行，一个十进制整数，表示最左侧的中心下标；若不存在这样的下标，输出 `-1`。",
+      "constraints": "- `1 <= nums.length <= 10^4`\n- `-1000 <= nums[i] <= 1000`",
+      "examples": [{ "input": "[1,7,3,6,5,6]", "output": "3" }],
+      "tests": [
+        { "input": "[1,7,3,6,5,6]", "visibility": "PUBLIC" },
+        { "input": "[1,2,3]", "visibility": "HIDDEN" },
+        { "input": "[2,1,-1]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        long total = 0;\n        for (int x : nums) total += x;\n        long left = 0;\n        int ans = -1;\n        for (int i = 0; i < nums.length; i++) {\n            long right = total - left - nums[i];\n            if (left == right) {\n                ans = i;\n                break;\n            }\n            left += nums[i];\n        }\n        System.out.println(ans);\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n}\n"
+    },
+    {
+      "slug": "reverse-string",
+      "title": "反转字符串",
+      "difficulty": "EASY",
+      "tags": ["string", "two-pointers"],
+      "statement": "给定一个字符串，请将它反转后输出。\n输入格式：一行，一个不含空格与换行符的字符串，直接写出内容，例如 `hello`。\n输出格式：一行，反转后的字符串，不加引号。",
+      "constraints": "- `1 <= s.length <= 10^5`\n- `s` 只由可见字符组成，且不含空格",
+      "examples": [{ "input": "hello", "output": "olleh" }],
+      "tests": [
+        { "input": "hello", "visibility": "PUBLIC" },
+        { "input": "a", "visibility": "HIDDEN" },
+        { "input": "ab", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        s = s.trim();\n        char[] c = s.toCharArray();\n        int i = 0, j = c.length - 1;\n        while (i < j) {\n            char t = c[i];\n            c[i] = c[j];\n            c[j] = t;\n            i++;\n            j--;\n        }\n        System.out.println(new String(c));\n    }\n}\n"
+    },
+    {
+      "slug": "sort-array-by-parity",
+      "title": "按奇偶排序数组",
+      "difficulty": "EASY",
+      "tags": ["array", "two-pointers"],
+      "statement": "给定一个整数数组 `nums`，请将所有偶数移动到数组前面、所有奇数移动到数组后面，并保持偶数之间、奇数之间原有的相对顺序不变。\n输入格式：一行，一个数组 `nums`，写成 `[3,1,2,4]` 形式（元素之间无空格）。\n输出格式：一行，调整后的数组，写成 `[2,4,3,1]` 形式（元素之间无空格）。",
+      "constraints": "- `0 <= nums.length <= 10^4`\n- `-10^4 <= nums[i] <= 10^4`",
+      "examples": [{ "input": "[3,1,2,4]", "output": "[2,4,3,1]" }],
+      "tests": [
+        { "input": "[3,1,2,4]", "visibility": "PUBLIC" },
+        { "input": "[0]", "visibility": "HIDDEN" },
+        { "input": "[-1,-2,-3,-4]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        int[] res = new int[nums.length];\n        int k = 0;\n        for (int x : nums) {\n            if (x % 2 == 0) res[k++] = x;\n        }\n        for (int x : nums) {\n            if (x % 2 != 0) res[k++] = x;\n        }\n        System.out.println(arrayToString(res));\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n\n    static String arrayToString(int[] a) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < a.length; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(a[i]);\n        }\n        return sb.append(']').toString();\n    }\n}\n"
+    },
+    {
+      "slug": "duplicate-zeros",
+      "title": "复写零",
+      "difficulty": "EASY",
+      "tags": ["array", "two-pointers"],
+      "statement": "给定一个固定长度的整数数组 `nums`，请将其中每个 `0` 再复写一遍，并把原来位于其后的元素向右平移一位。超出数组长度的元素直接丢弃，最终数组长度保持不变。\n输入格式：一行，一个数组 `nums`，写成 `[1,0,2,3,0,4,5,2]` 形式（元素之间无空格）。\n输出格式：一行，修改后的数组，写成 `[1,0,0,2,3,0,0,4]` 形式（元素之间无空格）。",
+      "constraints": "- `1 <= nums.length <= 10^4`\n- `0 <= nums[i] <= 10^4`",
+      "examples": [{ "input": "[1,0,2,3,0,4,5,2]", "output": "[1,0,0,2,3,0,0,4]" }],
+      "tests": [
+        { "input": "[1,0,2,3,0,4,5,2]", "visibility": "PUBLIC" },
+        { "input": "[1,2,3]", "visibility": "HIDDEN" },
+        { "input": "[0,0,0]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        int n = nums.length;\n        int[] out = new int[n];\n        int k = 0;\n        for (int x : nums) {\n            if (k < n) out[k++] = x;\n            if (x == 0 && k < n) out[k++] = x;\n        }\n        System.out.println(arrayToString(out));\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n\n    static String arrayToString(int[] a) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < a.length; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(a[i]);\n        }\n        return sb.append(']').toString();\n    }\n}\n"
+    },
+    {
+      "slug": "rotate-array",
+      "title": "轮转数组",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "two-pointers"],
+      "statement": "给定一个整数数组 `nums`，请将数组中的元素向右轮转 `k` 个位置。\n输入格式：一行，数组 `nums` 与整数 `k`，两者之间用单个 `;` 分隔；数组写成 `[1,2,3,4,5,6,7]` 形式（元素之间无空格），例如 `[1,2,3,4,5,6,7];3`。\n输出格式：一行，轮转后的数组，写成 `[5,6,7,1,2,3,4]` 形式（元素之间无空格）。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `-10^4 <= nums[i] <= 10^4`\n- `0 <= k <= 10^5`",
+      "examples": [{ "input": "[1,2,3,4,5,6,7];3", "output": "[5,6,7,1,2,3,4]" }],
+      "tests": [
+        { "input": "[1,2,3,4,5,6,7];3", "visibility": "PUBLIC" },
+        { "input": "[-1,-100,3,99];2", "visibility": "HIDDEN" },
+        { "input": "[1,2,3];4", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        int[] nums = parseIntArray(line.substring(0, sep));\n        int k = Integer.parseInt(line.substring(sep + 1).trim());\n        int n = nums.length;\n        if (n == 0) {\n            System.out.println(\"[]\");\n            return;\n        }\n        k %= n;\n        if (k < 0) k += n;\n        reverse(nums, 0, n - 1);\n        reverse(nums, 0, k - 1);\n        reverse(nums, k, n - 1);\n        System.out.println(arrayToString(nums));\n    }\n\n    static void reverse(int[] a, int i, int j) {\n        while (i < j) {\n            int t = a[i];\n            a[i] = a[j];\n            a[j] = t;\n            i++;\n            j--;\n        }\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n\n    static String arrayToString(int[] a) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < a.length; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(a[i]);\n        }\n        return sb.append(']').toString();\n    }\n}\n"
+    },
+    {
+      "slug": "container-with-most-water",
+      "title": "盛最多水的容器",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "two-pointers", "greedy"],
+      "statement": "给定一个长度为 `n` 的整数数组 `height`，第 `i` 条垂线的两个端点分别是 `(i, 0)` 和 `(i, height[i])`。请找出其中的两条垂线，使它们与 x 轴共同围成的容器能容纳最多的水，返回该容器的最大容量。\n输入格式：一行，一个数组 `height`，写成 `[1,8,6,2,5,4,8,3,7]` 形式（元素之间无空格）。\n输出格式：一行，一个十进制整数，表示容器的最大容量。",
+      "constraints": "- `2 <= height.length <= 10^5`\n- `0 <= height[i] <= 10^4`",
+      "examples": [{ "input": "[1,8,6,2,5,4,8,3,7]", "output": "49" }],
+      "tests": [
+        { "input": "[1,8,6,2,5,4,8,3,7]", "visibility": "PUBLIC" },
+        { "input": "[1,1]", "visibility": "HIDDEN" },
+        { "input": "[4,3,2,1,4]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] h = parseIntArray(line);\n        int l = 0, r = h.length - 1;\n        long best = 0;\n        while (l < r) {\n            long area = (long) Math.min(h[l], h[r]) * (r - l);\n            if (area > best) best = area;\n            if (h[l] < h[r]) l++;\n            else r--;\n        }\n        System.out.println(best);\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n}\n"
+    },
+    {
+      "slug": "subarray-sum-equals-k",
+      "title": "和为 K 的子数组",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "hash-table", "prefix-sum"],
+      "statement": "给定一个整数数组 `nums` 和一个整数 `k`，请统计并返回数组中元素之和恰好等于 `k` 的连续子数组的个数。\n输入格式：一行，数组 `nums` 与整数 `k`，两者之间用单个 `;` 分隔；数组写成 `[1,1,1]` 形式（元素之间无空格），例如 `[1,1,1];2`。\n输出格式：一行，一个十进制整数，表示和为 `k` 的连续子数组个数。",
+      "constraints": "- `1 <= nums.length <= 2 * 10^4`\n- `-1000 <= nums[i] <= 1000`\n- `-10^7 <= k <= 10^7`",
+      "examples": [{ "input": "[1,1,1];2", "output": "2" }],
+      "tests": [
+        { "input": "[1,1,1];2", "visibility": "PUBLIC" },
+        { "input": "[1,2,3];3", "visibility": "HIDDEN" },
+        { "input": "[-1,-1,1];0", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        int[] nums = parseIntArray(line.substring(0, sep));\n        long k = Long.parseLong(line.substring(sep + 1).trim());\n        HashMap<Long, Integer> seen = new HashMap<>();\n        seen.put(0L, 1);\n        long sum = 0;\n        long count = 0;\n        for (int x : nums) {\n            sum += x;\n            Integer c = seen.get(sum - k);\n            if (c != null) count += c;\n            seen.merge(sum, 1, Integer::sum);\n        }\n        System.out.println(count);\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n}\n"
+    },
+    {
+      "slug": "sort-colors",
+      "title": "颜色分类",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "two-pointers", "sorting"],
+      "statement": "给定一个只包含 `0`、`1`、`2` 的整数数组 `nums`，请原地将它们按 `0`、`1`、`2` 的顺序排列，并输出排列后的数组。\n输入格式：一行，一个数组 `nums`，写成 `[2,0,2,1,1,0]` 形式（元素之间无空格）。\n输出格式：一行，升序排列后的数组，写成 `[0,0,1,1,2,2]` 形式（元素之间无空格）。",
+      "constraints": "- `1 <= nums.length <= 10^5`\n- `nums[i]` 只能是 `0`、`1` 或 `2`",
+      "examples": [{ "input": "[2,0,2,1,1,0]", "output": "[0,0,1,1,2,2]" }],
+      "tests": [
+        { "input": "[2,0,2,1,1,0]", "visibility": "PUBLIC" },
+        { "input": "[2,0,1]", "visibility": "HIDDEN" },
+        { "input": "[0]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int[] nums = parseIntArray(line);\n        int low = 0, mid = 0, high = nums.length - 1;\n        while (mid <= high) {\n            if (nums[mid] == 0) {\n                int t = nums[low];\n                nums[low] = nums[mid];\n                nums[mid] = t;\n                low++;\n                mid++;\n            } else if (nums[mid] == 1) {\n                mid++;\n            } else {\n                int t = nums[mid];\n                nums[mid] = nums[high];\n                nums[high] = t;\n                high--;\n            }\n        }\n        System.out.println(arrayToString(nums));\n    }\n\n    static int[] parseIntArray(String s) {\n        s = s.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        s = s.trim();\n        if (s.isEmpty()) return new int[0];\n        String[] p = s.split(\",\");\n        int[] a = new int[p.length];\n        for (int i = 0; i < p.length; i++) a[i] = Integer.parseInt(p[i].trim());\n        return a;\n    }\n\n    static String arrayToString(int[] a) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < a.length; i++) {\n            if (i > 0) sb.append(',');\n            sb.append(a[i]);\n        }\n        return sb.append(']').toString();\n    }\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CodeAgent OJ / 排行榜</title>
+  <style>
+    :root{--bg:#f3f1eb;--bar:#ebe9e2;--ink:#292d30;--muted:#858981;--line:#d8d5ce;--orange:#d37737;--green:#3e8a69;--sans:"Avenir Next","Segoe UI","Microsoft YaHei",sans-serif;--mono:Consolas,monospace}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans)}button{font:inherit}
+    .topbar{height:64px;display:flex;align-items:center;padding:0 max(20px,calc((100vw - 1040px)/2));border-bottom:1px solid var(--line);background:var(--bar)}
+    .brand{margin-right:50px;color:#4d148c;font-size:21px;font-weight:800;letter-spacing:-.04em;text-decoration:none}.nav{display:flex;gap:28px;height:100%}.nav a{position:relative;display:grid;place-items:center;color:#59606a;text-decoration:none;font-weight:650}.nav a.active{color:var(--orange)}.nav a.active:after{position:absolute;right:0;bottom:0;left:0;height:2px;background:var(--orange);content:""}.avatar{display:grid;place-items:center;width:30px;height:30px;margin-left:auto;border:1px solid #b8b5ae;border-radius:50%;background:#dedbd3;font:11px var(--mono)}
+    .wrap{width:min(880px,calc(100% - 40px));margin:auto;padding:62px 0 80px}.heading{display:flex;justify-content:space-between;gap:30px;align-items:end;padding-bottom:28px;border-bottom:1px solid var(--line)}.eyebrow{margin:0 0 10px;color:var(--orange);font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase}.heading h1{margin:0;font-size:42px;line-height:1;letter-spacing:-.06em}.heading p{max-width:290px;margin:0;color:var(--muted);font-size:13px}
+    .tools{display:flex;align-items:center;justify-content:space-between;padding:24px 0 16px}.tabs{display:flex;gap:5px}.tabs button{padding:7px 12px;border:1px solid transparent;color:var(--muted);background:transparent;cursor:pointer}.tabs button:hover{color:var(--orange)}.tabs .active{border-color:var(--orange);color:#fff;background:var(--orange)}.sort{color:var(--muted);font:10px var(--mono)}
+    .table{border-top:2px solid var(--ink)}.thead,.item{display:grid;grid-template-columns:62px minmax(180px,1fr) 120px 90px;gap:20px;align-items:center}.thead{height:40px;color:var(--muted);font:10px var(--mono);text-transform:uppercase}.thead span:nth-child(n+3),.item>:nth-child(n+3){text-align:right}.item{min-height:72px;border-top:1px solid var(--line);animation:show .45s both;animation-delay:calc(var(--i)*70ms)}.item:hover{background:#eeece6}.rank{color:var(--muted);font:14px var(--mono)}.rank.top{color:var(--orange);font-weight:700}.user{display:flex;align-items:center;gap:12px}.mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #c3c0b8;border-radius:50%;background:#e4e1d9;font:10px var(--mono)}.name{font-weight:700}.meta{margin-top:1px;color:var(--muted);font-size:11px}.count{color:var(--green);font:700 15px var(--mono)}.streak{font:12px var(--mono)}.mine{border-top-color:var(--orange);background:rgba(211,119,55,.08)}.note{margin:18px 0 0;color:var(--muted);font-size:11px}@keyframes show{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+    @media(max-width:640px){.topbar{padding:0 16px}.brand{margin-right:25px;font-size:18px}.nav{gap:18px}.wrap{width:calc(100% - 32px);padding-top:40px}.heading{display:block}.heading h1{font-size:36px}.heading p{margin-top:16px}.tools{display:block}.sort{display:block;margin-top:12px}.thead,.item{grid-template-columns:38px minmax(130px,1fr) 70px;gap:10px}.thead span:nth-child(4),.item>:nth-child(4){display:none}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="#">CodeAgent OJ</a><nav class="nav"><a href="#">主页</a><a href="#">题库</a><a class="active" href="#">排行榜</a></nav><span class="avatar">N</span></header>
+  <main class="wrap">
+    <section class="heading"><div><p class="eyebrow">Accepted leaderboard</p><h1>排行榜</h1></div><p>按 Accepted 题数排名，记录每一次真正完成的题目。</p></section>
+    <div class="tools"><div class="tabs"><button class="active" type="button">本周</button><button type="button">本月</button><button type="button">总榜</button></div><span class="sort">SORTED BY / AC COUNT</span></div>
+    <section class="table" aria-label="Accepted 排行榜"><div class="thead"><span>Rank</span><span>Coder</span><span>Accepted</span><span>Streak</span></div>
+      <div class="item" style="--i:1"><span class="rank top">01</span><div class="user"><span class="mark">YL</span><div><div class="name">Yunlan</div><div class="meta">数组 · 哈希 · 二分</div></div></div><span class="count">86</span><span class="streak">12d</span></div>
+      <div class="item" style="--i:2"><span class="rank top">02</span><div class="user"><span class="mark">QW</span><div><div class="name">Qiao Wen</div><div class="meta">图 · 搜索 · 动态规划</div></div></div><span class="count">79</span><span class="streak">9d</span></div>
+      <div class="item" style="--i:3"><span class="rank top">03</span><div class="user"><span class="mark">LM</span><div><div class="name">Lin Mo</div><div class="meta">字符串 · 贪心</div></div></div><span class="count">74</span><span class="streak">14d</span></div>
+      <div class="item" style="--i:4"><span class="rank">04</span><div class="user"><span class="mark">HZ</span><div><div class="name">He Zhi</div><div class="meta">链表 · 栈 · 队列</div></div></div><span class="count">68</span><span class="streak">6d</span></div>
+      <div class="item mine" style="--i:5"><span class="rank">18</span><div class="user"><span class="mark">N</span><div><div class="name">你</div><div class="meta">距离下一位还差 3 题</div></div></div><span class="count">42</span><span class="streak">4d</span></div>
+    </section>
+    <p class="note">每天 04:00 更新 · 只统计独立题目的 Accepted 结果</p>
+  </main>
+  <script>document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelector('.tabs .active')?.classList.remove('active');b.classList.add('active')})</script>
+</body>
+</html>

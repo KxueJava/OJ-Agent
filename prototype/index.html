@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeAgent OJ | 两数之和</title>
+  <link rel="stylesheet" href="assets/app.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html"><img src="assets/codeagent-oj-logo.svg" alt="" width="25" height="25">CodeAgent OJ</a>
+    <nav class="nav" aria-label="主导航"><a href="home.html">主页</a><a class="active" href="index.html">题库</a><a href="home.html#learning">学习中心</a><a href="#mistakes">错题本</a></nav>
+    <div class="top-actions"><label class="search-wrap"><i data-lucide="search"></i><input class="search" aria-label="搜索题目、标签" placeholder="搜索题目、标签"></label><button class="icon-button" data-toast="通知中心暂时没有新消息" aria-label="通知" title="通知"><i data-lucide="bell"></i></button><span class="avatar">CO</span></div>
+  </header>
+  <nav class="mobile-workspace-tabs" aria-label="工作台视图"><button class="active" data-workspace-tab="problem">题面</button><button data-workspace-tab="editor">代码</button><button data-workspace-tab="result">结果</button><button data-workspace-tab="agent">Agent</button></nav>
+  <main class="workspace">
+    <section class="workspace-panel problem-pane active" data-workspace-panel="problem">
+      <div class="breadcrumb">题库 / 数组 / #1</div>
+      <div class="problem-title-row"><h1>两数之和</h1><button class="icon-button" data-toast="已收藏题目" aria-label="收藏题目" title="收藏题目"><i data-lucide="star"></i></button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px"><span class="difficulty medium">中等</span><span class="tag">数组</span><span class="tag">哈希表</span></div>
+      <div class="problem-tabs"><button class="active">题目</button><button data-toast="可查看自己的历史提交">提交</button><button data-toast="通过后可查看社区题解">题解 <i data-lucide="lock" style="width:12px;vertical-align:-2px"></i></button></div>
+      <h2>题目描述</h2><p>给定一个整数数组 <b>nums</b> 和一个整数目标值 <b>target</b>，请你在该数组中找出和为目标值 <b>target</b> 的两个整数，并返回它们的数组下标。</p><p>可以假设每种输入只会对应一个答案。同一个元素不能重复使用。</p>
+      <h2>示例 1</h2><div class="sample">输入：nums = [2,7,11,15], target = 9<br>输出：[0,1]<br>解释：nums[0] + nums[1] == 9。<button class="icon-button copy-sample" data-toast="样例输入已复制" aria-label="复制示例" title="复制示例"><i data-lucide="copy"></i></button></div>
+      <h2>示例 2</h2><div class="sample">输入：nums = [3,2,4], target = 6<br>输出：[1,2]<button class="icon-button copy-sample" data-toast="样例输入已复制" aria-label="复制示例" title="复制示例"><i data-lucide="copy"></i></button></div>
+      <h2>约束</h2><ul class="constraints"><li>2 ≤ nums.length ≤ 10<sup>4</sup></li><li>-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></li><li>只存在一个有效答案</li></ul>
+    </section>
+    <section class="workspace-panel editor-pane" data-workspace-panel="editor">
+      <div class="editor-toolbar"><span class="file-name"><i data-lucide="file-code-2"></i>Main.java</span><select class="language" aria-label="语言"><option>Java 21</option><option>Python 3.12</option><option>C++ 23</option></select><button class="secondary-button" data-run><i data-lucide="play" style="width:13px;vertical-align:-2px"></i> 运行</button><button class="primary-button" data-submit><i data-lucide="send" style="width:13px;vertical-align:-2px"></i> 提交</button></div>
+      <div class="code-editor" aria-label="Java 代码编辑器"><span class="code-line"><span class="kw">import</span> java.util.*;</span><span class="code-line"></span><span class="code-line"><span class="kw">public class</span> <span class="type">Main</span> {</span><span class="code-line">  <span class="kw">public static</span> <span class="type">int</span>[] <span class="method">twoSum</span>(<span class="type">int</span>[] nums, <span class="type">int</span> target) {</span><span class="code-line">    Map&lt;Integer, Integer&gt; seen = <span class="kw">new</span> HashMap&lt;&gt;();</span><span class="code-line">    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {</span><span class="code-line">      <span class="type">int</span> complement = target - nums[i];</span><span class="code-line">      <span class="kw">if</span> (seen.containsKey(complement)) {</span><span class="code-line">        <span class="kw">return new</span> <span class="type">int</span>[] { seen.get(complement), i };</span><span class="code-line">      }</span><span class="code-line">      seen.put(nums[i], i);</span><span class="code-line">    }</span><span class="code-line">    <span class="kw">return new</span> <span class="type">int</span>[<span class="num">0</span>];</span><span class="code-line">  }</span><span class="code-line">}</span></div>
+      <section class="run-panel"><div class="run-tabs"><button class="active">控制台</button><button>测试用例</button><span class="console-status" data-console-state>准备就绪</span></div><div class="console-body" data-console-output>点击“运行”使用公开样例测试代码。</div></section>
+    </section>
+    <aside class="workspace-panel results-pane" data-workspace-panel="result">
+      <section class="result-heading"><h2>本次提交</h2><div class="verdict accepted" data-verdict><i data-lucide="circle-check"></i><span>Accepted</span></div><div class="result-stats"><div class="result-stat">运行时间<strong>42 ms</strong></div><div class="result-stat">内存消耗<strong>41.2 MB</strong></div></div></section>
+      <section class="result-section"><h3>测试用例 <span>2 / 2 通过</span></h3><div class="test-case"><div class="test-case-header"><span>样例 1</span><span>通过 · 1 ms</span></div><code>输入 [2,7,11,15], 9 · 输出 [0,1]</code></div><div class="test-case"><div class="test-case-header"><span>样例 2</span><span>通过 · 1 ms</span></div><code>输入 [3,2,4], 6 · 输出 [1,2]</code></div></section>
+      <section class="agent-workbench"><header class="agent-workbench-head"><span class="agent-workbench-title"><i data-lucide="bot"></i>Agent 协作</span><button class="trace-toggle" data-toast="仅显示路由与审核结果，不展示内部推理">查看轨迹</button></header><div class="agent-workbench-body"><div class="agent-route"><span class="agent-chip">Supervisor</span> → <span class="agent-chip">Reviewer</span> → <span class="agent-chip">Safety ✓</span></div><p class="agent-answer" data-agent-answer>你的哈希表解法将查找从 O(n²) 优化到 O(n)，空间复杂度为 O(n)。</p><div class="agent-actions"><button class="agent-action" data-toast="Tutor 正在根据当前题面组织解释"><i data-lucide="message-circle-question"></i>解释题意</button><button class="agent-action" data-toast="Debugger 将分析下一次失败提交"><i data-lucide="bug"></i>分析代码</button></div><div class="hint-levels"><button class="hint-level selected" data-hint="one">提示 1</button><button class="hint-level" data-hint="two">提示 2</button><button class="hint-level" data-hint="three">提示 3</button></div></div></section>
+      <section class="result-section"><h3>提交记录 <button class="text-button" data-toast="将打开提交历史">查看全部</button></h3><div class="subtle" style="margin-top:8px">今天 10:32 · Java 21 · Accepted</div></section>
+    </aside>
+  </main>
+</body>
+</html>

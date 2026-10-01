@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: oj-judge-worker
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:codeagent_oj_local}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:root}
+
+app:
+  judge:
+    queue: ${JUDGE_QUEUE:oj.submissions}
+    work-dir: ${JUDGE_WORK_DIR:${java.io.tmpdir}/codeagent-oj-judge}
+    timeout-ms: ${JUDGE_TIMEOUT_MS:3000}
+    sandbox:
+      docker-command: ${DOCKER_COMMAND:docker}
+      image: ${JUDGE_SANDBOX_IMAGE:codeagent-oj-java21-sandbox:latest}
+      memory-mb: ${JUDGE_SANDBOX_MEMORY_MB:256}
+      pids-limit: ${JUDGE_SANDBOX_PIDS_LIMIT:64}
+      cpus: ${JUDGE_SANDBOX_CPUS:1}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

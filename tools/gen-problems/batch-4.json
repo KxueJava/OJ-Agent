@@ -1,0 +1,221 @@
+{
+  "batch": 4,
+  "problems": [
+    {
+      "slug": "pascal-triangle",
+      "title": "杨辉三角",
+      "difficulty": "EASY",
+      "tags": ["array", "dynamic-programming"],
+      "statement": "给定行数 `numRows`，输出杨辉三角的前 `numRows` 行。\n输入格式：一行，一个整数 `numRows`。\n输出格式：一行，把前 `numRows` 行以嵌套数组形式输出，形如 `[[1],[1,1],[1,2,1]]`；同一行内元素之间、各行之间都用 `,` 分隔，不留空格。",
+      "constraints": "- `1 <= numRows <= 30`\n- 每行中的数值都可用 32 位有符号整数表示",
+      "examples": [
+        { "input": "5", "output": "[[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]" },
+        { "input": "1", "output": "[[1]]" }
+      ],
+      "tests": [
+        { "input": "5", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "30", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        int n = Integer.parseInt(line.trim());\n        StringBuilder sb = new StringBuilder();\n        sb.append('[');\n        int[] row = new int[0];\n        for (int i = 0; i < n; i++) {\n            int[] cur = new int[i + 1];\n            cur[0] = 1;\n            cur[i] = 1;\n            for (int j = 1; j < i; j++) {\n                cur[j] = row[j - 1] + row[j];\n            }\n            if (i > 0) sb.append(',');\n            sb.append('[');\n            for (int j = 0; j <= i; j++) {\n                if (j > 0) sb.append(',');\n                sb.append(cur[j]);\n            }\n            sb.append(']');\n            row = cur;\n        }\n        sb.append(']');\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "power-of-two",
+      "title": "2 的幂",
+      "difficulty": "EASY",
+      "tags": ["bit-manipulation", "math"],
+      "statement": "给定一个整数 `n`，判断它是否为 2 的整数次幂，即是否存在非负整数 `k` 使得 `n = 2^k`。\n输入格式：一行，一个 32 位有符号整数 `n`。\n输出格式：一行，`true` 或 `false`（小写）。",
+      "constraints": "- `-2^31 <= n <= 2^31 - 1`",
+      "examples": [
+        { "input": "16", "output": "true" },
+        { "input": "1", "output": "true" }
+      ],
+      "tests": [
+        { "input": "16", "visibility": "PUBLIC" },
+        { "input": "0", "visibility": "HIDDEN" },
+        { "input": "-2147483648", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        int n = Integer.parseInt(line.trim());\n        boolean ok = n > 0 && (n & (n - 1)) == 0;\n        System.out.println(ok ? \"true\" : \"false\");\n    }\n}\n"
+    },
+    {
+      "slug": "number-of-one-bits",
+      "title": "位 1 的个数",
+      "difficulty": "EASY",
+      "tags": ["bit-manipulation"],
+      "statement": "给定一个 32 位有符号整数 `n`，统计它的二进制补码表示中 1 的个数。\n输入格式：一行，一个 32 位有符号整数 `n`。\n输出格式：一行，`n` 的 32 位二进制补码表示中 1 的个数，十进制整数。",
+      "constraints": "- `-2^31 <= n <= 2^31 - 1`\n- 按 32 位补码统计，负数的高位补 1 也要计入",
+      "examples": [
+        { "input": "11", "output": "3" },
+        { "input": "-1", "output": "32" }
+      ],
+      "tests": [
+        { "input": "11", "visibility": "PUBLIC" },
+        { "input": "0", "visibility": "HIDDEN" },
+        { "input": "-2147483648", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        int n = Integer.parseInt(line.trim());\n        System.out.println(Integer.bitCount(n));\n    }\n}\n"
+    },
+    {
+      "slug": "single-number",
+      "title": "只出现一次的数字",
+      "difficulty": "EASY",
+      "tags": ["bit-manipulation", "array"],
+      "statement": "给定一个整数数组，其中恰好有一个元素只出现一次，其余每个元素都恰好出现两次，找出这个只出现一次的元素。\n输入格式：一行，一个数组字面量，形如 `[4,1,2,1,2]`，元素之间用 `,` 分隔且不留空格。\n输出格式：一行，只出现一次的那个整数，十进制整数。",
+      "constraints": "- `1 <= nums.length <= 10^5`，且 `nums.length` 是奇数\n- `-2^31 <= nums[i] <= 2^31 - 1`\n- 保证只有一个元素出现一次，其余元素都恰好出现两次",
+      "examples": [
+        { "input": "[2,2,1]", "output": "1" },
+        { "input": "[4,1,2,1,2]", "output": "4" }
+      ],
+      "tests": [
+        { "input": "[2,2,1]", "visibility": "PUBLIC" },
+        { "input": "[1]", "visibility": "HIDDEN" },
+        { "input": "[-1,-1,-2147483648]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String s = line.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        int result = 0;\n        if (!s.trim().isEmpty()) {\n            for (String part : s.split(\",\")) {\n                result ^= Integer.parseInt(part.trim());\n            }\n        }\n        System.out.println(result);\n    }\n}\n"
+    },
+    {
+      "slug": "longest-increasing-subsequence",
+      "title": "最长递增子序列",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "dynamic-programming"],
+      "statement": "给定一个整数数组 `nums`，求它的最长严格递增子序列的长度，子序列不要求连续。\n输入格式：一行，一个数组字面量，形如 `[10,9,2,5,3,7,101,18]`，元素之间用 `,` 分隔且不留空格。\n输出格式：一行，最长严格递增子序列的长度，十进制整数。",
+      "constraints": "- `1 <= nums.length <= 2500`\n- `-10^4 <= nums[i] <= 10^4`",
+      "examples": [
+        { "input": "[10,9,2,5,3,7,101,18]", "output": "4" },
+        { "input": "[7,7,7,7]", "output": "1" }
+      ],
+      "tests": [
+        { "input": "[10,9,2,5,3,7,101,18]", "visibility": "PUBLIC" },
+        { "input": "[1]", "visibility": "HIDDEN" },
+        { "input": "[1,3,6,7,9,4,10,5,6]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String s = line.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        String[] parts = s.split(\",\");\n        int n = parts.length;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) {\n            nums[i] = Integer.parseInt(parts[i].trim());\n        }\n        int[] dp = new int[n];\n        int best = 0;\n        for (int i = 0; i < n; i++) {\n            dp[i] = 1;\n            for (int j = 0; j < i; j++) {\n                if (nums[j] < nums[i] && dp[j] + 1 > dp[i]) {\n                    dp[i] = dp[j] + 1;\n                }\n            }\n            if (dp[i] > best) best = dp[i];\n        }\n        System.out.println(best);\n    }\n}\n"
+    },
+    {
+      "slug": "perfect-squares",
+      "title": "完全平方数",
+      "difficulty": "MEDIUM",
+      "tags": ["dynamic-programming", "math"],
+      "statement": "给定正整数 `n`，求最少需要多少个完全平方数（`1,4,9,16,...`）的和等于 `n`，同一个平方数可以重复使用。\n输入格式：一行，一个正整数 `n`。\n输出格式：一行，和为 `n` 的完全平方数的最少个数，十进制整数。",
+      "constraints": "- `1 <= n <= 10^4`",
+      "examples": [
+        { "input": "12", "output": "3" },
+        { "input": "13", "output": "2" }
+      ],
+      "tests": [
+        { "input": "12", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "10000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        int n = Integer.parseInt(line.trim());\n        int[] dp = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            dp[i] = Integer.MAX_VALUE;\n            for (int j = 1; j * j <= i; j++) {\n                int cand = dp[i - j * j] + 1;\n                if (cand < dp[i]) dp[i] = cand;\n            }\n        }\n        System.out.println(dp[n]);\n    }\n}\n"
+    },
+    {
+      "slug": "partition-equal-subset-sum",
+      "title": "分割等和子集",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "dynamic-programming"],
+      "statement": "给定一个只包含正整数的数组 `nums`，判断能否把它分割成两个子集，使得两个子集的元素和相等。\n输入格式：一行，一个数组字面量，形如 `[1,5,11,5]`，元素之间用 `,` 分隔且不留空格。\n输出格式：一行，`true` 或 `false`（小写）。",
+      "constraints": "- `1 <= nums.length <= 200`\n- `1 <= nums[i] <= 100`",
+      "examples": [
+        { "input": "[1,5,11,5]", "output": "true" },
+        { "input": "[1,2,3,5]", "output": "false" }
+      ],
+      "tests": [
+        { "input": "[1,5,11,5]", "visibility": "PUBLIC" },
+        { "input": "[1]", "visibility": "HIDDEN" },
+        { "input": "[100,100]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String s = line.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        String[] parts = s.split(\",\");\n        int[] nums = new int[parts.length];\n        int sum = 0;\n        for (int i = 0; i < parts.length; i++) {\n            nums[i] = Integer.parseInt(parts[i].trim());\n            sum += nums[i];\n        }\n        if (sum % 2 != 0) {\n            System.out.println(\"false\");\n            return;\n        }\n        int target = sum / 2;\n        boolean[] dp = new boolean[target + 1];\n        dp[0] = true;\n        for (int num : nums) {\n            for (int j = target; j >= num; j--) {\n                if (dp[j - num]) dp[j] = true;\n            }\n        }\n        System.out.println(dp[target] ? \"true\" : \"false\");\n    }\n}\n"
+    },
+    {
+      "slug": "decode-ways",
+      "title": "解码方法",
+      "difficulty": "MEDIUM",
+      "tags": ["dynamic-programming", "string"],
+      "statement": "一条消息由数字组成，编码规则为 `A -> 1`、`B -> 2`、…、`Z -> 26`。给定一个只含数字的字符串 `s`，计算它共有多少种解码方式；若存在无法解码的部分（例如前导零），答案为 `0`。\n输入格式：一行，一个只由数字字符 `0`-`9` 组成的字符串 `s`，不带引号也不含空格。\n输出格式：一行，`s` 的解码方式总数，十进制整数（保证不超过 64 位有符号整数范围）。",
+      "constraints": "- `1 <= s.length <= 60`\n- `s` 只由字符 `0`-`9` 组成\n- 结果不超过 64 位有符号整数范围",
+      "examples": [
+        { "input": "226", "output": "3" },
+        { "input": "06", "output": "0" }
+      ],
+      "tests": [
+        { "input": "226", "visibility": "PUBLIC" },
+        { "input": "0", "visibility": "HIDDEN" },
+        { "input": "1111111111", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        String s = line.trim();\n        if (s.isEmpty()) {\n            System.out.println(0);\n            return;\n        }\n        int n = s.length();\n        long[] dp = new long[n + 1];\n        dp[0] = 1;\n        for (int i = 1; i <= n; i++) {\n            int one = s.charAt(i - 1) - '0';\n            if (one >= 1 && one <= 9) dp[i] += dp[i - 1];\n            if (i >= 2) {\n                int two = (s.charAt(i - 2) - '0') * 10 + one;\n                if (two >= 10 && two <= 26) dp[i] += dp[i - 2];\n            }\n        }\n        System.out.println(dp[n]);\n    }\n}\n"
+    },
+    {
+      "slug": "letter-combinations-of-a-phone-number",
+      "title": "电话号码的字母组合",
+      "difficulty": "MEDIUM",
+      "tags": ["string", "recursion", "hash-table"],
+      "statement": "电话键盘上数字到字母的映射为：`2 -> abc`、`3 -> def`、`4 -> ghi`、`5 -> jkl`、`6 -> mno`、`7 -> pqrs`、`8 -> tuv`、`9 -> wxyz`。给定一个数字串 `digits`，列出它所有可能的字母组合。\n输入格式：一行，一个只由字符 `2`-`9` 组成的数字串 `digits`，不带引号也不含空格。\n输出格式：一行，所有字母组合用 `,` 分隔且不留空格；排列顺序为从左到右逐位展开，先固定前缀，再按当前位映射中的字母顺序取字母，例如 `digits = 23` 时输出 `ad,ae,af,bd,be,bf,cd,ce,cf`。",
+      "constraints": "- `1 <= digits.length <= 4`\n- `digits` 只包含字符 `2`-`9`",
+      "examples": [
+        { "input": "23", "output": "ad,ae,af,bd,be,bf,cd,ce,cf" },
+        { "input": "9", "output": "w,x,y,z" }
+      ],
+      "tests": [
+        { "input": "23", "visibility": "PUBLIC" },
+        { "input": "7", "visibility": "HIDDEN" },
+        { "input": "9999", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String digits = line.trim();\n        String[] map = {\"\", \"\", \"abc\", \"def\", \"ghi\", \"jkl\", \"mno\", \"pqrs\", \"tuv\", \"wxyz\"};\n        List<String> current = new ArrayList<>();\n        current.add(\"\");\n        for (int i = 0; i < digits.length(); i++) {\n            String letters = map[digits.charAt(i) - '0'];\n            List<String> next = new ArrayList<>();\n            for (String prefix : current) {\n                for (int j = 0; j < letters.length(); j++) {\n                    next.add(prefix + letters.charAt(j));\n                }\n            }\n            current = next;\n        }\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < current.size(); i++) {\n            if (i > 0) sb.append(',');\n            sb.append(current.get(i));\n        }\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "subsets",
+      "title": "子集",
+      "difficulty": "MEDIUM",
+      "tags": ["array", "recursion", "bit-manipulation"],
+      "statement": "给定一个不含重复元素的整数数组 `nums`，列出它的所有子集（幂集）。\n输入格式：一行，一个数组字面量，形如 `[1,2,3]`，元素之间用 `,` 分隔且不留空格。\n输出格式：一行，按固定顺序输出全部 `2^n` 个子集，整体是嵌套数组，形如 `[[],[1],[2],[1,2]]`，子集之间用 `,` 分隔且不留空格。顺序规定为：第 `k` 个子集（`k` 从 `0` 开始计数）由 `k` 的二进制表示决定，若 `k` 的第 `i` 位（最低位记作第 `0` 位）为 `1`，则该子集包含 `nums[i]`，子集内元素按原数组下标从小到大排列。",
+      "constraints": "- `1 <= nums.length <= 10`\n- `-100 <= nums[i] <= 100`\n- `nums` 中所有元素互不相同",
+      "examples": [
+        { "input": "[1,2,3]", "output": "[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]" },
+        { "input": "[5]", "output": "[[],[5]]" }
+      ],
+      "tests": [
+        { "input": "[1,2,3]", "visibility": "PUBLIC" },
+        { "input": "[-100,100]", "visibility": "HIDDEN" },
+        { "input": "[1,2,3,4,5,6,7,8,9,10]", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String s = line.trim();\n        if (s.startsWith(\"[\")) s = s.substring(1);\n        if (s.endsWith(\"]\")) s = s.substring(0, s.length() - 1);\n        String[] parts = s.split(\",\");\n        int n = parts.length;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) {\n            nums[i] = Integer.parseInt(parts[i].trim());\n        }\n        int total = 1 << n;\n        StringBuilder sb = new StringBuilder();\n        sb.append('[');\n        for (int mask = 0; mask < total; mask++) {\n            if (mask > 0) sb.append(',');\n            sb.append('[');\n            boolean first = true;\n            for (int i = 0; i < n; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    if (!first) sb.append(',');\n                    sb.append(nums[i]);\n                    first = false;\n                }\n            }\n            sb.append(']');\n        }\n        sb.append(']');\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "bitwise-and-of-numbers-range",
+      "title": "数字范围按位与",
+      "difficulty": "MEDIUM",
+      "tags": ["bit-manipulation"],
+      "statement": "给定两个整数 `left` 和 `right`，计算闭区间 `[left, right]` 内所有整数按位与（AND）的结果。\n输入格式：一行，两个整数 `left` 和 `right`，中间用单个 `;` 分隔，例如 `5;7`。\n输出格式：一行，区间内所有整数按位与的结果，十进制整数。",
+      "constraints": "- `0 <= left <= right <= 2^31 - 1`",
+      "examples": [
+        { "input": "5;7", "output": "4" },
+        { "input": "0;0", "output": "0" }
+      ],
+      "tests": [
+        { "input": "5;7", "visibility": "PUBLIC" },
+        { "input": "0;2147483647", "visibility": "HIDDEN" },
+        { "input": "1073741824;2147483647", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String[] parts = line.trim().split(\";\");\n        int left = Integer.parseInt(parts[0].trim());\n        int right = Integer.parseInt(parts[1].trim());\n        int shift = 0;\n        while (left < right) {\n            left >>= 1;\n            right >>= 1;\n            shift++;\n        }\n        System.out.println(left << shift);\n    }\n}\n"
+    },
+    {
+      "slug": "edit-distance",
+      "title": "编辑距离",
+      "difficulty": "HARD",
+      "tags": ["string", "dynamic-programming"],
+      "statement": "给定两个字符串 `word1` 和 `word2`，每次操作可以插入一个字符、删除一个字符或替换一个字符，求把 `word1` 变成 `word2` 所需的最少操作数。\n输入格式：一行，两个只含小写英文字母的字符串 `word1` 和 `word2`，中间用单个 `;` 分隔，例如 `horse;ros`；字符串可以为空，此时对应位置为空（例如 `;abc` 表示 `word1` 为空串）。\n输出格式：一行，最少操作数，十进制整数。",
+      "constraints": "- `0 <= word1.length, word2.length <= 500`\n- 两个字符串都只含小写英文字母",
+      "examples": [
+        { "input": "horse;ros", "output": "3" },
+        { "input": "intention;execution", "output": "5" }
+      ],
+      "tests": [
+        { "input": "horse;ros", "visibility": "PUBLIC" },
+        { "input": ";abc", "visibility": "HIDDEN" },
+        { "input": "abcdefghijklmnopqrstuvwxyz;zyxwvutsrqponmlkjihgfedcba", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int idx = line.indexOf(';');\n        String a = (idx < 0 ? line : line.substring(0, idx)).trim();\n        String b = (idx < 0 ? \"\" : line.substring(idx + 1)).trim();\n        int n = a.length();\n        int m = b.length();\n        int[] prev = new int[m + 1];\n        int[] cur = new int[m + 1];\n        for (int j = 0; j <= m; j++) {\n            prev[j] = j;\n        }\n        for (int i = 1; i <= n; i++) {\n            cur[0] = i;\n            for (int j = 1; j <= m; j++) {\n                int cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;\n                int best = prev[j] + 1;\n                if (cur[j - 1] + 1 < best) best = cur[j - 1] + 1;\n                if (prev[j - 1] + cost < best) best = prev[j - 1] + cost;\n                cur[j] = best;\n            }\n            int[] tmp = prev;\n            prev = cur;\n            cur = tmp;\n        }\n        System.out.println(prev[m]);\n    }\n}\n"
+    }
+  ]
+}
