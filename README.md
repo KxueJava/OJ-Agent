@@ -66,7 +66,7 @@ npm run dev                                                                     
 - 后端健康检查 `http://localhost:8080/api/health`，Agent 自检 `http://localhost:8080/api/agent/health`，
   OpenAPI `http://localhost:8080/swagger-ui.html`
 - 本地 RabbitMQ 默认 `guest/guest`（仅本机可连）
-- 判题需要沙箱镜像（含 JDK + g++/gcc），构建脚本见 `tools/sandbox/`；worker 需要访问宿主 Docker
+- 判题需要沙箱镜像（含 JDK + g++/gcc），构建脚本见 `backend/oj-judge-worker/sandbox/java21/Dockerfile`；worker 需要访问宿主 Docker
 - 前端 API 地址取自 `NEXT_PUBLIC_API_BASE_URL`（默认 `http://localhost:8080`）
 
 ### 第一个管理员
