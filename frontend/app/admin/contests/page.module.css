@@ -1,0 +1,41 @@
+.page{min-height:100dvh;background:#f3f1eb;color:#252a2d;font:13px/1.55 "Avenir Next","Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{width:min(1180px,calc(100% - 40px));margin:auto;padding:26px 0 70px}
+.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid #d8d5ce}
+.heading h1{margin:0;font-size:28px;letter-spacing:-.04em}
+.heading p{margin:7px 0 0;color:#858981;font-size:12px;max-width:620px}
+.eyebrow{margin:0 0 7px;color:#d37737;font:10px Consolas,monospace;letter-spacing:.13em;text-transform:uppercase}
+.message{margin:14px 0;padding:9px 12px;border-left:3px solid #d37737;background:#f7efe2;color:#8a5a15;font-size:12px}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:34px;margin-top:22px}
+.panel{margin-top:22px;padding-top:14px;border-top:1px solid #d8d5ce}
+.panel:first-child{margin-top:0}
+.panel h2{margin:0 0 12px;font-size:16px;letter-spacing:-.02em}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form label{display:grid;gap:4px;color:#858981;font-size:11px}
+.form input{height:32px;padding:0 9px;border:1px solid #c9c7bf;background:#f7f5ef;color:#252a2d;font:12px inherit}
+.form button{grid-column:1/-1;justify-self:start}
+.state{color:#858981;font-size:12px}
+.row,.rowActive{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #e2e0d8}
+.rowActive{background:#f7efe2}
+.rowMain{flex:1;display:grid;gap:3px;border:0;padding:0;text-align:left;color:inherit;background:transparent;cursor:pointer}
+.rowMain b{font-size:13px}
+.rowMain small{color:#858981;font:10px Consolas,monospace}
+.badge,.badgeDRAFT,.badgeSCHEDULED,.badgeRUNNING,.badgeENDED,.badgeFINALIZED,.badgeCANCELLED{padding:3px 7px;border:1px solid #c9c7bf;color:#5d625d;font:10px Consolas,monospace}
+.badgeRUNNING{border-color:#9fc4b1;color:#277456;background:#eaf3ee}
+.badgeSCHEDULED{border-color:#d9b38f;color:#95611e;background:#f7efe2}
+.badgeCANCELLED{color:#a74743;border-color:#ddb3b0}
+.statusLine{display:flex;justify-content:space-between;color:#858981;font:11px Consolas,monospace;margin-top:8px}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.primary,.ghost{height:32px;padding:0 13px;font-size:12px;font-weight:700;cursor:pointer}
+.primary{border:1px solid #d37737;color:#fff;background:#d37737}
+.ghost{border:1px solid #c9c7bf;color:#4f554f;background:transparent}
+.ghost:disabled,.primary:disabled{color:#a9a7a0;cursor:default}
+.issue{margin:0 0 6px;padding:7px 10px;border-left:3px solid #a74743;background:#f7ecea;color:#8a3b38;font-size:11px}
+.ok{margin:0;padding:7px 10px;border-left:3px solid #277456;background:#eaf3ee;color:#1f5c44;font-size:11px}
+.problemRow{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px 0;border-bottom:1px solid #e2e0d8;font-size:12px}
+.problemRow small{display:block;color:#858981;font:10px Consolas,monospace}
+.label{color:#d37737;font:700 12px Consolas,monospace}
+.inline{display:flex;gap:7px;margin-top:10px}
+.inline input{flex:1;height:32px;padding:0 9px;border:1px solid #c9c7bf;background:#f7f5ef;font:12px inherit}
+.notice{margin:0 0 6px;color:#3f4540;font-size:12px}
+.notice em{float:right;color:#858981;font:10px Consolas,monospace;font-style:normal}
+@media(max-width:1000px){.grid{display:block}.form{grid-template-columns:1fr}}

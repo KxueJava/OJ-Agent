@@ -1,0 +1,305 @@
+{
+  "batch": 7,
+  "problems": [
+    {
+      "slug": "day-of-year",
+      "title": "一年中的第几天",
+      "difficulty": "EASY",
+      "tags": ["simulation", "math"],
+      "statement": "给定一个公历日期，请计算它是这一年的第几天。\n输入格式：一行，一个日期，格式为 `YYYY-MM-DD`，其中月份与日期都写成两位（不足两位补 `0`），例如 `2019-02-28`。\n输出格式：一行，一个十进制整数，表示该日期是这一年的第几天（1 月 1 日记为第 1 天）。",
+      "constraints": "- `1 <= 年份 <= 9999`\n- 输入的日期保证合法（月份在 1 到 12 之间，日期不超过该月的天数）\n- 闰年指能被 4 整除但不能被 100 整除，或者能被 400 整除的年份",
+      "examples": [{ "input": "2019-02-28", "output": "59" }],
+      "tests": [
+        { "input": "2019-02-28", "visibility": "PUBLIC" },
+        { "input": "2020-12-31", "visibility": "HIDDEN" },
+        { "input": "1900-03-01", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        String[] parts = line.split(\"-\");\n        int year = Integer.parseInt(parts[0].trim());\n        int month = Integer.parseInt(parts[1].trim());\n        int day = Integer.parseInt(parts[2].trim());\n        int[] md = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};\n        if (isLeap(year)) md[1] = 29;\n        int ans = 0;\n        for (int i = 0; i < month - 1; i++) ans += md[i];\n        ans += day;\n        System.out.println(ans);\n    }\n\n    static boolean isLeap(int y) {\n        return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;\n    }\n}\n"
+    },
+    {
+      "slug": "leap-year-count",
+      "title": "区间内闰年的个数",
+      "difficulty": "EASY",
+      "tags": ["math", "counting"],
+      "statement": "给定两个年份 `a` 和 `b`，请统计区间 `[a, b]` 中闰年的个数。闰年指能被 `4` 整除但不能被 `100` 整除，或者能被 `400` 整除的年份。\n输入格式：一行，两个整数 `a` 与 `b`，两者之间用单个 `;` 分隔，例如 `2000;2010`。\n输出格式：一行，一个十进制整数，表示 `[a, b]` 中闰年的个数。",
+      "constraints": "- `1 <= a <= b <= 10^9`",
+      "examples": [{ "input": "2000;2010", "output": "3" }],
+      "tests": [
+        { "input": "2000;2010", "visibility": "PUBLIC" },
+        { "input": "1;4", "visibility": "HIDDEN" },
+        { "input": "1896;1904", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        long a = Long.parseLong(line.substring(0, sep).trim());\n        long b = Long.parseLong(line.substring(sep + 1).trim());\n        System.out.println(countLeap(b) - countLeap(a - 1));\n    }\n\n    static long countLeap(long n) {\n        if (n <= 0) return 0;\n        return n / 4 - n / 100 + n / 400;\n    }\n}\n"
+    },
+    {
+      "slug": "decimal-to-binary",
+      "title": "十进制转二进制",
+      "difficulty": "EASY",
+      "tags": ["math", "string"],
+      "statement": "给定一个非负整数 `n`，请输出它的二进制表示。\n输入格式：一行，一个非负整数 `n`，例如 `13`。\n输出格式：一行，`n` 的二进制表示，不能有前导零；`n = 0` 时输出 `0`。",
+      "constraints": "- `0 <= n <= 2^63 - 1`",
+      "examples": [{ "input": "13", "output": "1101" }],
+      "tests": [
+        { "input": "13", "visibility": "PUBLIC" },
+        { "input": "0", "visibility": "HIDDEN" },
+        { "input": "9223372036854775807", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        long n = Long.parseLong(line.trim());\n        System.out.println(Long.toBinaryString(n));\n    }\n}\n"
+    },
+    {
+      "slug": "binary-palindrome-check",
+      "title": "二进制回文判断",
+      "difficulty": "EASY",
+      "tags": ["math", "string"],
+      "statement": "给定一个正整数 `n`，请判断它的二进制表示（不含前导零）是否为回文串。回文串指从左到右读和从右到左读完全相同的字符串。\n输入格式：一行，一个正整数 `n`，例如 `9`。\n输出格式：一行，若 `n` 的二进制表示是回文串则输出 `true`，否则输出 `false`（全小写）。",
+      "constraints": "- `1 <= n <= 2^63 - 1`",
+      "examples": [{ "input": "9", "output": "true" }],
+      "tests": [
+        { "input": "9", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "10", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        long n = Long.parseLong(line.trim());\n        String s = Long.toBinaryString(n);\n        boolean ok = true;\n        int i = 0;\n        int j = s.length() - 1;\n        while (i < j) {\n            if (s.charAt(i) != s.charAt(j)) {\n                ok = false;\n                break;\n            }\n            i++;\n            j--;\n        }\n        System.out.println(ok);\n    }\n}\n"
+    },
+    {
+      "slug": "narcissistic-numbers",
+      "title": "水仙花数",
+      "difficulty": "EASY",
+      "tags": ["math", "counting"],
+      "statement": "水仙花数是指各位数字的立方和恰好等于它本身的三位数，例如 `153 = 1^3 + 5^3 + 3^3`。\n给定区间 `[m, n]`，请按从小到大的顺序输出区间内所有的水仙花数。\n输入格式：一行，两个三位整数 `m` 与 `n`，两者之间用单个 `;` 分隔，例如 `100;400`。\n输出格式：一行，区间内所有的水仙花数按从小到大的顺序构成一个数组，写成 `[153,370]` 形式（元素之间无空格）；若区间内没有水仙花数，输出 `[]`。",
+      "constraints": "- `100 <= m <= n <= 999`",
+      "examples": [{ "input": "100;400", "output": "[153,370,371]" }],
+      "tests": [
+        { "input": "100;400", "visibility": "PUBLIC" },
+        { "input": "100;999", "visibility": "HIDDEN" },
+        { "input": "200;300", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        int m = Integer.parseInt(line.substring(0, sep).trim());\n        int n = Integer.parseInt(line.substring(sep + 1).trim());\n        StringBuilder sb = new StringBuilder(\"[\");\n        boolean first = true;\n        for (int x = m; x <= n; x++) {\n            int a = x / 100;\n            int b = (x / 10) % 10;\n            int c = x % 10;\n            if (a * a * a + b * b * b + c * c * c == x) {\n                if (!first) sb.append(',');\n                sb.append(x);\n                first = false;\n            }\n        }\n        sb.append(']');\n        System.out.println(sb.toString());\n    }\n}\n"
+    },
+    {
+      "slug": "perfect-number-check",
+      "title": "判断完全数",
+      "difficulty": "EASY",
+      "tags": ["math", "counting"],
+      "statement": "完全数是指所有真因数（小于它本身的正因数）之和恰好等于它本身的正整数，例如 `28 = 1 + 2 + 4 + 7 + 14`。\n给定一个正整数 `n`，请判断它是否为完全数。\n输入格式：一行，一个正整数 `n`，例如 `28`。\n输出格式：一行，若 `n` 是完全数则输出 `true`，否则输出 `false`（全小写）。",
+      "constraints": "- `1 <= n <= 10^8`",
+      "examples": [{ "input": "28", "output": "true" }],
+      "tests": [
+        { "input": "28", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "33550336", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        long n = Long.parseLong(line.trim());\n        long sum = 0;\n        for (long i = 1; i * i <= n; i++) {\n            if (n % i == 0) {\n                if (i < n) sum += i;\n                long other = n / i;\n                if (other != i && other < n) sum += other;\n            }\n        }\n        System.out.println(sum == n);\n    }\n}\n"
+    },
+    {
+      "slug": "divisor-count",
+      "title": "正因数个数",
+      "difficulty": "EASY",
+      "tags": ["math", "counting"],
+      "statement": "给定一个正整数 `n`，请输出它的正因数个数。\n输入格式：一行，一个正整数 `n`，例如 `12`。\n输出格式：一行，一个十进制整数，表示 `n` 的正因数个数。",
+      "constraints": "- `1 <= n <= 10^9`",
+      "examples": [{ "input": "12", "output": "6" }],
+      "tests": [
+        { "input": "12", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "1000000000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        long n = Long.parseLong(line.trim());\n        long count = 0;\n        for (long i = 1; i * i <= n; i++) {\n            if (n % i == 0) {\n                count++;\n                if (i != n / i) count++;\n            }\n        }\n        System.out.println(count);\n    }\n}\n"
+    },
+    {
+      "slug": "unique-visited-cells",
+      "title": "机器人走过的格子数",
+      "difficulty": "EASY",
+      "tags": ["simulation", "string"],
+      "statement": "一个机器人初始位于平面直角坐标系的 `(0, 0)` 处。给定一串移动指令，机器人按顺序执行：`U` 表示 `y` 坐标加 1，`D` 表示 `y` 坐标减 1，`L` 表示 `x` 坐标减 1，`R` 表示 `x` 坐标加 1。\n请统计机器人经过的不同位置（含起点）的数量。\n输入格式：一行，一个只由 `U`、`D`、`L`、`R` 组成的字符串，长度不超过 10^5，例如 `UD`。\n输出格式：一行，一个十进制整数，表示机器人经过的不同位置的数量。",
+      "constraints": "- `1 <= 字符串长度 <= 10^5`\n- 字符串只包含 `U`、`D`、`L`、`R`",
+      "examples": [{ "input": "UD", "output": "2" }],
+      "tests": [
+        { "input": "UD", "visibility": "PUBLIC" },
+        { "input": "L", "visibility": "HIDDEN" },
+        { "input": "UUUU", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        s = s.trim();\n        Set<Long> seen = new HashSet<>();\n        long x = 0;\n        long y = 0;\n        seen.add(x * 1000000L + y);\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == 'U') y++;\n            else if (c == 'D') y--;\n            else if (c == 'L') x--;\n            else if (c == 'R') x++;\n            seen.add(x * 1000000L + y);\n        }\n        System.out.println(seen.size());\n    }\n}\n"
+    },
+    {
+      "slug": "rock-paper-scissors-score",
+      "title": "石头剪刀布净胜局",
+      "difficulty": "EASY",
+      "tags": ["simulation", "string", "counting"],
+      "statement": "两名玩家玩「石头剪刀布」，各自给出一个等长的出拳序列，序列中只含 `R`（石头）、`P`（布）、`S`（剪刀），两个序列逐位对应每一局。规则为 `R` 胜 `S`、`S` 胜 `P`、`P` 胜 `R`，出拳相同时为平局。\n请计算第一名玩家的净胜局数，即（他胜的局数）减去（他负的局数）。\n输入格式：一行，两个等长字符串，两者之间用单个 `;` 分隔，例如 `RRR;SSS`。\n输出格式：一行，一个十进制整数，表示第一名玩家的净胜局数，可能为负数。",
+      "constraints": "- `1 <= 每个字符串的长度 <= 10^5`\n- 两个字符串长度相同，且只包含 `R`、`P`、`S`",
+      "examples": [{ "input": "RRR;SSS", "output": "3" }],
+      "tests": [
+        { "input": "RRR;SSS", "visibility": "PUBLIC" },
+        { "input": "PSS;SRR", "visibility": "HIDDEN" },
+        { "input": "SSSS;SSSS", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        String a = line.substring(0, sep).trim();\n        String b = line.substring(sep + 1).trim();\n        int score = 0;\n        for (int i = 0; i < a.length(); i++) {\n            char x = a.charAt(i);\n            char y = b.charAt(i);\n            if (x == y) continue;\n            if ((x == 'R' && y == 'S') || (x == 'S' && y == 'P') || (x == 'P' && y == 'R')) score++;\n            else score--;\n        }\n        System.out.println(score);\n    }\n}\n"
+    },
+    {
+      "slug": "count-vowels",
+      "title": "元音字母计数",
+      "difficulty": "EASY",
+      "tags": ["string", "counting"],
+      "statement": "给定一个只含小写英文字母的字符串，请统计其中元音字母 `a`、`e`、`i`、`o`、`u` 出现的总次数。\n输入格式：一行，一个只含小写英文字母的字符串，长度不超过 10^5，例如 `hello`。\n输出格式：一行，一个十进制整数，表示元音字母的个数。",
+      "constraints": "- `1 <= 字符串长度 <= 10^5`\n- 字符串只包含小写英文字母",
+      "examples": [{ "input": "hello", "output": "2" }],
+      "tests": [
+        { "input": "hello", "visibility": "PUBLIC" },
+        { "input": "xyz", "visibility": "HIDDEN" },
+        { "input": "aeiouaeiou", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) return;\n        s = s.trim();\n        int count = 0;\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') count++;\n        }\n        System.out.println(count);\n    }\n}\n"
+    },
+    {
+      "slug": "weekday-of-date",
+      "title": "日期对应的星期",
+      "difficulty": "MEDIUM",
+      "tags": ["simulation", "math"],
+      "statement": "已知 `1900-01-01` 是星期一。给定一个日期，请判断它是星期几。\n输入格式：一行，一个日期，格式为 `YYYY-MM-DD`，其中月份与日期都写成两位（不足两位补 `0`），例如 `2021-01-01`。\n输出格式：一行，一个十进制整数，取值 `1` 到 `7`，`1` 表示星期一、`2` 表示星期二、……、`7` 表示星期日。",
+      "constraints": "- 日期范围：`1900-01-01` 到 `2099-12-31`\n- 输入的日期保证合法（月份在 1 到 12 之间，日期不超过该月的天数）",
+      "examples": [{ "input": "2021-01-01", "output": "5" }],
+      "tests": [
+        { "input": "2021-01-01", "visibility": "PUBLIC" },
+        { "input": "1900-01-01", "visibility": "HIDDEN" },
+        { "input": "2024-01-01", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        String[] parts = line.split(\"-\");\n        int year = Integer.parseInt(parts[0].trim());\n        int month = Integer.parseInt(parts[1].trim());\n        int day = Integer.parseInt(parts[2].trim());\n        long days = 0;\n        for (int y = 1900; y < year; y++) days += isLeap(y) ? 366 : 365;\n        int[] md = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};\n        if (isLeap(year)) md[1] = 29;\n        for (int i = 0; i < month - 1; i++) days += md[i];\n        days += day - 1;\n        System.out.println(days % 7 + 1);\n    }\n\n    static boolean isLeap(int y) {\n        return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;\n    }\n}\n"
+    },
+    {
+      "slug": "date-after-days",
+      "title": "日期加上若干天",
+      "difficulty": "MEDIUM",
+      "tags": ["simulation", "math"],
+      "statement": "给定一个日期和一个非负整数 `k`，请计算该日期之后第 `k` 天的日期（`k = 0` 表示日期本身）。\n输入格式：一行，一个日期与一个整数 `k`，两者之间用单个 `;` 分隔；日期格式为 `YYYY-MM-DD`，其中月份与日期都写成两位（不足两位补 `0`），例如 `2020-02-28;3`。\n输出格式：一行，结果日期，格式为 `YYYY-MM-DD`（年份补足四位，月份与日期补足两位）。",
+      "constraints": "- 起始日期不早于 `1900-01-01`\n- `0 <= k <= 10^4`\n- 保证结果日期不晚于 `2099-12-31`",
+      "examples": [{ "input": "2020-02-28;3", "output": "2020-03-02" }],
+      "tests": [
+        { "input": "2020-02-28;3", "visibility": "PUBLIC" },
+        { "input": "2019-12-31;1", "visibility": "HIDDEN" },
+        { "input": "1900-02-28;1", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        String[] parts = line.substring(0, sep).trim().split(\"-\");\n        int year = Integer.parseInt(parts[0].trim());\n        int month = Integer.parseInt(parts[1].trim());\n        int day = Integer.parseInt(parts[2].trim());\n        long k = Long.parseLong(line.substring(sep + 1).trim());\n        for (long i = 0; i < k; i++) {\n            day++;\n            if (day > daysInMonth(year, month)) {\n                day = 1;\n                month++;\n                if (month > 12) {\n                    month = 1;\n                    year++;\n                }\n            }\n        }\n        System.out.println(String.format(\"%04d-%02d-%02d\", year, month, day));\n    }\n\n    static int daysInMonth(int y, int m) {\n        int[] md = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};\n        if (m == 2 && isLeap(y)) return 29;\n        return md[m - 1];\n    }\n\n    static boolean isLeap(int y) {\n        return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;\n    }\n}\n"
+    },
+    {
+      "slug": "days-between-two-dates",
+      "title": "两个日期相差的天数",
+      "difficulty": "MEDIUM",
+      "tags": ["simulation", "math"],
+      "statement": "给定两个日期，请计算它们之间相差的天数（取绝对值）。\n输入格式：一行，两个日期，两者之间用单个 `;` 分隔；每个日期的格式为 `YYYY-MM-DD`，其中月份与日期都写成两位（不足两位补 `0`），例如 `2020-01-01;2020-03-01`。\n输出格式：一行，一个十进制整数，表示两个日期相差的天数，结果非负。",
+      "constraints": "- 两个日期都在 `1900-01-01` 到 `2099-12-31` 之间\n- 输入的日期保证合法（月份在 1 到 12 之间，日期不超过该月的天数）",
+      "examples": [{ "input": "2020-01-01;2020-03-01", "output": "60" }],
+      "tests": [
+        { "input": "2020-01-01;2020-03-01", "visibility": "PUBLIC" },
+        { "input": "1900-01-01;1900-01-01", "visibility": "HIDDEN" },
+        { "input": "1900-01-01;2000-01-01", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        String[] p1 = line.substring(0, sep).trim().split(\"-\");\n        String[] p2 = line.substring(sep + 1).trim().split(\"-\");\n        long d1 = toDays(Integer.parseInt(p1[0].trim()), Integer.parseInt(p1[1].trim()), Integer.parseInt(p1[2].trim()));\n        long d2 = toDays(Integer.parseInt(p2[0].trim()), Integer.parseInt(p2[1].trim()), Integer.parseInt(p2[2].trim()));\n        System.out.println(Math.abs(d1 - d2));\n    }\n\n    static long toDays(int year, int month, int day) {\n        long days = 0;\n        for (int y = 1900; y < year; y++) days += isLeap(y) ? 366 : 365;\n        int[] md = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};\n        if (isLeap(year)) md[1] = 29;\n        for (int i = 0; i < month - 1; i++) days += md[i];\n        return days + day - 1;\n    }\n\n    static boolean isLeap(int y) {\n        return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;\n    }\n}\n"
+    },
+    {
+      "slug": "decimal-to-base-n",
+      "title": "十进制转任意进制",
+      "difficulty": "MEDIUM",
+      "tags": ["math", "string"],
+      "statement": "给定一个非负整数 `n` 和一个进制 `b`，请输出 `n` 在 `b` 进制下的表示。大于 9 的数字位依次用大写字母 `A` 到 `Z` 表示，即 `A` 表示 10，`B` 表示 11，……，`Z` 表示 35。\n输入格式：一行，整数 `n` 与进制 `b`，两者之间用单个 `;` 分隔，例如 `255;16`。\n输出格式：一行，`n` 在 `b` 进制下的表示，不能有前导零；`n = 0` 时输出 `0`。",
+      "constraints": "- `0 <= n <= 10^18`\n- `2 <= b <= 36`",
+      "examples": [{ "input": "255;16", "output": "FF" }],
+      "tests": [
+        { "input": "255;16", "visibility": "PUBLIC" },
+        { "input": "0;2", "visibility": "HIDDEN" },
+        { "input": "1000000;36", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        long n = Long.parseLong(line.substring(0, sep).trim());\n        int b = Integer.parseInt(line.substring(sep + 1).trim());\n        if (n == 0) {\n            System.out.println(0);\n            return;\n        }\n        StringBuilder sb = new StringBuilder();\n        while (n > 0) {\n            int r = (int) (n % b);\n            sb.append(r < 10 ? (char) ('0' + r) : (char) ('A' + r - 10));\n            n /= b;\n        }\n        System.out.println(sb.reverse().toString());\n    }\n}\n"
+    },
+    {
+      "slug": "count-primes-in-range",
+      "title": "区间内素数的个数",
+      "difficulty": "MEDIUM",
+      "tags": ["math", "counting"],
+      "statement": "给定两个整数 `a` 和 `b`，请统计区间 `[a, b]` 中素数的个数。素数指大于 1 且只有 1 和它本身两个正因数的整数。\n输入格式：一行，两个整数 `a` 与 `b`，两者之间用单个 `;` 分隔，例如 `1;10`。\n输出格式：一行，一个十进制整数，表示 `[a, b]` 中素数的个数。",
+      "constraints": "- `1 <= a <= b <= 10^6`",
+      "examples": [{ "input": "1;10", "output": "4" }],
+      "tests": [
+        { "input": "1;10", "visibility": "PUBLIC" },
+        { "input": "1;1", "visibility": "HIDDEN" },
+        { "input": "1;1000000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        int a = Integer.parseInt(line.substring(0, sep).trim());\n        int b = Integer.parseInt(line.substring(sep + 1).trim());\n        boolean[] composite = new boolean[b + 1];\n        int count = 0;\n        for (int i = 2; i <= b; i++) {\n            if (!composite[i]) {\n                if (i >= a) count++;\n                for (long j = (long) i * i; j <= b; j += i) composite[(int) j] = true;\n            }\n        }\n        System.out.println(count);\n    }\n}\n"
+    },
+    {
+      "slug": "pythagorean-triple-count",
+      "title": "勾股三元组计数",
+      "difficulty": "MEDIUM",
+      "tags": ["math", "counting"],
+      "statement": "给定一个正整数 `n`，请统计满足下列条件的三元组 `(a, b, c)` 的个数：`a`、`b`、`c` 都是正整数，`a <= b <= c`，`a + b + c = n`，且 `a^2 + b^2 = c^2`。\n输入格式：一行，一个正整数 `n`，例如 `12`。\n输出格式：一行，一个十进制整数，表示满足条件的三元组个数。",
+      "constraints": "- `3 <= n <= 10^4`",
+      "examples": [{ "input": "12", "output": "1" }],
+      "tests": [
+        { "input": "12", "visibility": "PUBLIC" },
+        { "input": "3", "visibility": "HIDDEN" },
+        { "input": "10000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int n = Integer.parseInt(line.trim());\n        long count = 0;\n        for (int a = 1; 3 * a <= n; a++) {\n            for (int b = a; a + 2 * b <= n; b++) {\n                int c = n - a - b;\n                if ((long) a * a + (long) b * b == (long) c * c) count++;\n            }\n        }\n        System.out.println(count);\n    }\n}\n"
+    },
+    {
+      "slug": "josephus-problem",
+      "title": "约瑟夫环",
+      "difficulty": "MEDIUM",
+      "tags": ["simulation", "math", "recursion"],
+      "statement": "`n` 个人围成一圈，编号从 `1` 到 `n`。从 `1` 号开始报数，报到 `k` 的人离开圈子，然后从离开者的下一位重新从 `1` 开始报数，如此重复，直到圈中只剩一个人。\n请输出最后留下的人的编号。\n输入格式：一行，整数 `n` 与 `k`，两者之间用单个 `;` 分隔，例如 `10;3`。\n输出格式：一行，一个十进制整数，表示最后留下的人的编号（编号从 `1` 开始）。",
+      "constraints": "- `1 <= n <= 10^6`\n- `1 <= k <= 10^6`",
+      "examples": [{ "input": "10;3", "output": "4" }],
+      "tests": [
+        { "input": "10;3", "visibility": "PUBLIC" },
+        { "input": "1;1", "visibility": "HIDDEN" },
+        { "input": "1000000;1", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        int n = Integer.parseInt(line.substring(0, sep).trim());\n        int k = Integer.parseInt(line.substring(sep + 1).trim());\n        long pos = 0;\n        for (int i = 2; i <= n; i++) {\n            pos = (pos + k) % i;\n        }\n        System.out.println(pos + 1);\n    }\n}\n"
+    },
+    {
+      "slug": "bulb-switch-count",
+      "title": "亮着的灯的数量",
+      "difficulty": "MEDIUM",
+      "tags": ["math", "counting", "simulation"],
+      "statement": "有 `n` 盏灯，编号从 `1` 到 `n`，初始全部熄灭。接下来依次执行 `n` 轮操作：第 `i` 轮把所有编号为 `i` 的倍数的灯翻转一次（亮变灭，灭变亮）。\n请输出 `n` 轮操作结束后仍然亮着的灯的数量。\n输入格式：一行，一个正整数 `n`，例如 `10`。\n输出格式：一行，一个十进制整数，表示最后亮着的灯的数量。",
+      "constraints": "- `1 <= n <= 10^9`",
+      "examples": [{ "input": "10", "output": "3" }],
+      "tests": [
+        { "input": "10", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "1000000000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        long n = Long.parseLong(line.trim());\n        long r = (long) Math.sqrt((double) n);\n        while ((r + 1) * (r + 1) <= n) r++;\n        while (r * r > n) r--;\n        System.out.println(r);\n    }\n}\n"
+    },
+    {
+      "slug": "sum-of-multiples",
+      "title": "3 和 5 的倍数之和",
+      "difficulty": "MEDIUM",
+      "tags": ["math", "counting"],
+      "statement": "给定一个正整数 `n`，请计算 `1` 到 `n` 之间（含 `1` 和 `n`）所有能被 `3` 整除或能被 `5` 整除的整数之和，同一个整数只计一次。\n输入格式：一行，一个正整数 `n`，例如 `10`。\n输出格式：一行，一个十进制整数，表示满足条件的整数之和。",
+      "constraints": "- `1 <= n <= 10^9`",
+      "examples": [{ "input": "10", "output": "33" }],
+      "tests": [
+        { "input": "10", "visibility": "PUBLIC" },
+        { "input": "1", "visibility": "HIDDEN" },
+        { "input": "1000000000", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        long n = Long.parseLong(line.trim());\n        System.out.println(sumOfMultiples(n, 3) + sumOfMultiples(n, 5) - sumOfMultiples(n, 15));\n    }\n\n    static long sumOfMultiples(long n, long d) {\n        long m = n / d;\n        return d * (m * (m + 1) / 2);\n    }\n}\n"
+    },
+    {
+      "slug": "count-digit-occurrences",
+      "title": "数字出现次数",
+      "difficulty": "HARD",
+      "tags": ["math", "counting"],
+      "statement": "给定一个正整数 `n` 和一个数字 `d`（`0` 到 `9`），请统计从 `1` 到 `n` 的所有整数的十进制写法中，数字 `d` 一共出现了多少次，不计算前导零。例如在 `1` 到 `13` 中，数字 `1` 出现了 6 次。\n输入格式：一行，整数 `n` 与数字 `d`，两者之间用单个 `;` 分隔，例如 `20;1`。\n输出格式：一行，一个十进制整数，表示数字 `d` 出现的总次数。",
+      "constraints": "- `1 <= n <= 10^18`\n- `0 <= d <= 9`",
+      "examples": [{ "input": "20;1", "output": "12" }],
+      "tests": [
+        { "input": "20;1", "visibility": "PUBLIC" },
+        { "input": "1;0", "visibility": "HIDDEN" },
+        { "input": "999999999999999999;9", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        line = line.trim();\n        int sep = line.indexOf(';');\n        long n = Long.parseLong(line.substring(0, sep).trim());\n        int d = Integer.parseInt(line.substring(sep + 1).trim());\n        long total = 0;\n        long p = 1;\n        while (p <= n) {\n            long high = n / (p * 10);\n            long cur = (n / p) % 10;\n            long low = n % p;\n            if (d == 0) {\n                if (high > 0) {\n                    total += (high - 1) * p;\n                    if (cur > 0) total += p;\n                    else total += low + 1;\n                }\n            } else {\n                total += high * p;\n                if (cur > d) total += p;\n                else if (cur == d) total += low + 1;\n            }\n            if (p > n / 10) break;\n            p *= 10;\n        }\n        System.out.println(total);\n    }\n}\n"
+    }
+  ]
+}

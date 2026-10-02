@@ -93,6 +93,12 @@ public class AutoDiagnosisService {
                      WHERE s.status IN ('WA','CE','RE','TLE','MLE')
                        AND s.created_at > DATE_SUB(NOW(), INTERVAL ? MINUTE)
                        AND NOT EXISTS (SELECT 1 FROM agent_findings f WHERE f.submission_id=s.id AND f.kind='DIAGNOSIS')
+                       -- 竞赛期间不做自动诊断（与 /api/agent/ask 的拦截同一策略）：
+                       -- 否则诊断卡片会把"错在哪、哪个边界漏了"直接告诉参赛选手，等于没禁用助手
+                       AND (s.contest_id IS NULL OR NOT EXISTS (
+                             SELECT 1 FROM contests c
+                              WHERE c.id = s.contest_id AND c.status='RUNNING'
+                                AND NOW() >= c.start_at AND NOW() < c.end_at))
                      ORDER BY s.created_at DESC, s.id DESC
                      LIMIT ?
                     """, lookbackMinutes, maxPerScan);

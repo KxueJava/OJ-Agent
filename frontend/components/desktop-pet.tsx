@@ -1,6 +1,7 @@
 "use client";
 
 import { PointerEvent, useEffect, useRef, useState } from "react";
+import { useContestLock } from "../lib/contest-lock";
 import { usePathname } from "next/navigation";
 import AgentPanel from "./agent-panel";
 import styles from "./desktop-pet.module.css";
@@ -23,6 +24,8 @@ function PetMark() {
 
 export default function DesktopPet({ problemVersion, sourceCode = "", verdict }: Props) {
   const [open, setOpen] = useState(false);
+  const [lockNotice, setLockNotice] = useState(false);
+  const lock = useContestLock();
   const [hidden, setHidden] = useState(false);
   const [activeVersion, setActiveVersion] = useState(problemVersion ?? 0);
   const [activeSource, setActiveSource] = useState(sourceCode);
@@ -107,7 +110,12 @@ export default function DesktopPet({ problemVersion, sourceCode = "", verdict }:
 
   return <div className={styles.root} style={position ? { left: position.x, top: position.y } : undefined}>
     {open && <div className={styles.drawer}>{activeVersion > 0 ? <AgentPanel problemVersion={activeVersion} sourceCode={activeSource} verdict={verdict} /> : <div className={styles.contextEmpty}>进入题目工作台后，可以使用 Agent 学习助手。</div>}</div>}
-    <button className={styles.pet} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } setOpen((value) => !value); }} aria-label="打开 Agent 助手" aria-expanded={open} title={open ? "收回学习伙伴" : "打开学习伙伴"}>
+    <button className={styles.pet} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } if (lock.locked) { setLockNotice(true); window.setTimeout(() => setLockNotice(false), 2800); return; } setOpen((value) => !value); }} aria-label="打开 Agent 助手" aria-expanded={open} title={open ? "收回学习伙伴" : "打开学习伙伴"}>
+      {lockNotice && (
+        <span style={{ position: "absolute", right: 0, bottom: "calc(100% + 8px)", width: 190, padding: "9px 11px", border: "1px solid #d9b38f", background: "#f7efe2", color: "#8a5a15", fontSize: 11, lineHeight: 1.5, textAlign: "left" }}>
+          比赛进行中，禁止使用 Agent 助手{lock.slug ? `（${lock.slug}）` : ""}
+        </span>
+      )}
       <span className={styles.pulse} />
       <PetMark />
     </button>

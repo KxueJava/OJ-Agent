@@ -1,0 +1,64 @@
+.page{min-height:100dvh;background:#f3f1eb;color:#252a2d;font:14px/1.55 "Avenir Next","Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{width:min(1120px,calc(100% - 40px));margin:auto;padding:14px 0 72px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:22px;border-bottom:1px solid #d8d5ce}
+.head h1{margin:0;font-size:32px;letter-spacing:-.05em}
+.head p{margin:8px 0 0;color:#858981;font-size:13px;max-width:640px}
+.eyebrow{margin:0 0 8px;color:#d37737;font:10px Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+.state{margin:22px 0;color:#858981}
+.tabs{display:flex;flex-wrap:wrap;gap:5px}
+.tabs button{padding:5px 10px;border:1px solid #c9c7bf;color:#6f736e;background:transparent;font:11px inherit;cursor:pointer}
+.tabs button.on{border-color:#d37737;color:#fff;background:#d37737}
+.list{margin-top:20px;display:grid;gap:12px}
+.card{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px;align-items:center;padding:18px;border:1px solid #d8d5ce;background:#ebe9e2;text-decoration:none;color:inherit}
+.card:hover{border-color:#d37737}
+.card b{display:block;font-size:17px;font-weight:700;letter-spacing:-.02em}
+.card small{display:block;margin-top:6px;color:#858981;font:11px Consolas,monospace}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid #c9c7bf;color:#5d625d;font:10px Consolas,monospace;text-transform:uppercase}
+.badge i{width:6px;height:6px;border-radius:50%;background:#858981}
+.badge.running{border-color:#9fc4b1;color:#277456;background:#eaf3ee}.badge.running i{background:#277456}
+.badge.scheduled{border-color:#d9b38f;color:#95611e;background:#f7efe2}.badge.finalized{border-color:#c9c7bf;color:#4f554f}
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 14px;color:#858981;font-size:11px}
+.metrics strong{display:block;color:#252a2d;font:700 14px Consolas,monospace}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:44px;align-items:end;padding:34px 0 24px;border-bottom:1px solid #d8d5ce}
+.hero h1{margin:0;font-size:clamp(28px,4vw,40px);letter-spacing:-.055em}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chip{padding:4px 8px;border:1px solid #c9c7bf;color:#5d625d;background:#f7f5ef;font:11px Consolas,monospace}
+.live{padding-left:22px;border-left:1px solid #d8d5ce}
+.live .label{display:flex;align-items:center;gap:7px;color:#858981;font:10px Consolas,monospace;text-transform:uppercase}
+.live .clock{margin-top:8px;font:700 30px Consolas,monospace;letter-spacing:-.06em}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:44px;margin-top:32px}
+.panel{padding:16px 0;border-top:1px solid #d8d5ce}
+.panel:first-child{border-top:2px solid #252a2d}
+.panel h2{margin:0 0 12px;font-size:18px;letter-spacing:-.03em}
+.table{width:100%;border-collapse:collapse;border-top:2px solid #252a2d}
+.table th{padding:8px 10px;color:#858981;font:10px Consolas,monospace;text-align:left;text-transform:uppercase}
+.table td{height:58px;padding:0 10px;border-bottom:1px solid #d8d5ce;font-size:13px}
+.label-cell{width:40px;color:#858981;font:12px Consolas,monospace}
+.score{width:70px;text-align:right;color:#858981;font:11px Consolas,monospace}
+.hiddenNote{margin:14px 0 0;padding:11px 13px;border-left:3px solid #d9b38f;background:#f7efe2;color:#8a5a15;font-size:12px}
+.notice{padding:11px 0;border-bottom:1px solid #e2e0d8;font-size:12px}
+.notice em{float:right;color:#858981;font:10px Consolas,monospace;font-style:normal}
+.rule{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e2e0d8;color:#858981;font-size:11px}
+.rule strong{color:#252a2d;font:700 12px Consolas,monospace}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.primary,.ghost{display:inline-flex;align-items:center;height:38px;padding:0 16px;text-decoration:none;font-size:12px;font-weight:700}
+.primary{border:1px solid #d37737;color:#fff;background:#d37737}
+.ghost{border:1px solid #c9c7bf;color:#4f554f}
+@media(max-width:900px){.card,.hero,.grid{display:block}.metrics,.live{margin-top:14px}}
+/* 榜单：名称列给足宽度且不换行，题目列多了就横向滚动（否则会把名字挤成一行一个字） */
+.standings{margin-top:12px;overflow-x:auto;border-top:2px solid #252a2d}
+.standingsTable{width:100%;min-width:720px;border-collapse:collapse}
+.standingsTable th{padding:10px 12px;border-bottom:1px solid #d8d5ce;color:#858981;font:10px Consolas,monospace;text-align:left;text-transform:uppercase;white-space:nowrap}
+.standingsTable td{padding:12px;border-bottom:1px solid #e6e3db;font-size:13px;vertical-align:middle}
+.standingsTable tbody tr:hover{background:#efede6}
+.rowMine{background:#f7efe2}
+.colRank{width:52px;color:#858981;font:12px Consolas,monospace}
+.colName{min-width:150px;white-space:nowrap}
+.colName b{font-weight:700}
+.colName small{display:block;margin-top:2px;color:#858981;font:10px Consolas,monospace}
+.colNum{width:78px;text-align:right;font:12px Consolas,monospace;color:#4f554f}
+.colProblem{width:84px;text-align:center;white-space:nowrap}
+.cellAc{color:#277456;font:700 12px Consolas,monospace}
+.cellAc em{margin-left:4px;color:#a74743;font:10px Consolas,monospace;font-style:normal}
+.cellFail{color:#a74743;font:700 12px Consolas,monospace}
+.cellNone{color:#c2bfb8;font:12px Consolas,monospace}

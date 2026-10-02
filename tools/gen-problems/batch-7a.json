@@ -1,0 +1,51 @@
+{
+  "batch": 7,
+  "problems": [
+    {
+      "slug": "binary-string-to-decimal",
+      "title": "二进制串转十进制",
+      "difficulty": "EASY",
+      "tags": ["simulation", "math", "string"],
+      "statement": "把一个只由 0 和 1 组成的字符串当作二进制数，输出它对应的十进制值。字符串可能有前导零。\n输入格式：一行，一个长度不超过 62 的二进制字符串（只含 `0` 和 `1`，不含空格）。\n输出格式：一行，一个十进制整数。",
+      "constraints": "- `1 <= 字符串长度 <= 62`\n- 允许前导零（例如 `000101` 表示 5）\n- 结果不超过 64 位有符号整数范围",
+      "examples": [{ "input": "000101", "output": "5" }],
+      "tests": [
+        { "input": "000101", "visibility": "PUBLIC" },
+        { "input": "0", "visibility": "HIDDEN" },
+        { "input": "11111111111111111111111111111111111111111111111111111111111111", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        String s = line.trim();\n        if (s.isEmpty()) return;\n        long value = 0;\n        for (int i = 0; i < s.length(); i++) {\n            value = (value << 1) + (s.charAt(i) - '0');\n        }\n        System.out.println(value);\n    }\n}\n"
+    },
+    {
+      "slug": "run-length-encode",
+      "title": "行程编码",
+      "difficulty": "MEDIUM",
+      "tags": ["simulation", "string", "counting"],
+      "statement": "行程编码（RLE）把连续重复的字符替换成「字符 + 重复次数」。请对给定字符串做行程编码。\n输入格式：一行，一个只含小写字母且不含空格的字符串，长度不超过 10^5。\n输出格式：一行，编码结果：对每一段连续相同的字符，依次输出该字符和它的重复次数（次数写成十进制，即使是 1 也要写出来）。例如 `aaabbc` 输出 `a3b2c1`。",
+      "constraints": "- `1 <= 字符串长度 <= 10^5`\n- 只含小写字母 `a`-`z`\n- 次数可能是多位数（如连续 100 个相同字符要输出 `100`）",
+      "examples": [{ "input": "aaabbc", "output": "a3b2c1" }],
+      "tests": [
+        { "input": "aaabbc", "visibility": "PUBLIC" },
+        { "input": "a", "visibility": "HIDDEN" },
+        { "input": "abcdef", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        String s = line.trim();\n        if (s.isEmpty()) return;\n        StringBuilder out = new StringBuilder();\n        int i = 0;\n        while (i < s.length()) {\n            int j = i;\n            while (j < s.length() && s.charAt(j) == s.charAt(i)) j++;\n            out.append(s.charAt(i)).append(j - i);\n            i = j;\n        }\n        System.out.println(out);\n    }\n}\n"
+    },
+    {
+      "slug": "clock-angle-minutes",
+      "title": "时针与分针的夹角",
+      "difficulty": "MEDIUM",
+      "tags": ["simulation", "math"],
+      "statement": "给定一个时刻（小时与分钟），求时针与分针之间较小的那个夹角，结果用「度」表示。\n输入格式：一行，形如 `3;30`，分号前是小时 `h`（`0 <= h <= 23`），分号后是分钟 `m`（`0 <= m <= 59`）。24 小时制下，时针位置按 12 小时刻度循环（例如 15 点与 3 点相同）。\n输出格式：一行，一个整数，表示两针较小夹角的角度（0 到 180 之间）。因为夹角一定是 0.5 度的整数倍，结果必为整数。",
+      "constraints": "- `0 <= h <= 23`、`0 <= m <= 59`\n- 时针每分钟走 0.5 度，分针每分钟走 6 度\n- 输出 0..180 之间的整数（较大夹角要换算成 360 减它）",
+      "examples": [{ "input": "3;30", "output": "75" }],
+      "tests": [
+        { "input": "3;30", "visibility": "PUBLIC" },
+        { "input": "0;0", "visibility": "HIDDEN" },
+        { "input": "6;0", "visibility": "HIDDEN" },
+        { "input": "23;59", "visibility": "HIDDEN" }
+      ],
+      "solution": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null || line.trim().isEmpty()) return;\n        String[] parts = line.trim().split(\";\");\n        int h = Integer.parseInt(parts[0].trim()) % 12;\n        int m = Integer.parseInt(parts[1].trim());\n        double hourAngle = h * 30.0 + m * 0.5;\n        double minuteAngle = m * 6.0;\n        double diff = Math.abs(hourAngle - minuteAngle);\n        double answer = Math.min(diff, 360.0 - diff);\n        System.out.println(Math.round(answer));\n    }\n}\n"
+    }
+  ]
+}

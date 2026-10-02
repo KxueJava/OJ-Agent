@@ -30,6 +30,19 @@ public class JudgeAdmin {
                     System.out.println("promoted=" + changed + " user=" + username);
                 }
                 case "cleanup" -> System.out.println("removed=" + statement.executeUpdate("DELETE FROM outbox_events WHERE id=999000001"));
+                case "audit" -> {
+                    try (ResultSet rs = statement.executeQuery("SELECT admin_user_id,action,target_id,created_at FROM admin_audit_log ORDER BY created_at DESC LIMIT 8")) {
+                        while (rs.next()) System.out.println("  admin=" + rs.getLong(1) + " " + rs.getString(2) + " target=" + rs.getLong(3) + " at " + rs.getString(4));
+                    }
+                }
+                case "contest" -> {
+                    try (ResultSet rs = statement.executeQuery("SELECT id,slug,title,status,start_at,end_at,freeze_minutes FROM contests ORDER BY created_at DESC LIMIT 5")) {
+                        while (rs.next()) System.out.println("  #" + rs.getLong(1) + " " + rs.getString(2) + " " + rs.getString(3) + " [" + rs.getString(4) + "] " + rs.getString(5) + " → " + rs.getString(6) + " freeze=" + rs.getInt(7));
+                    }
+                    try (ResultSet rs = statement.executeQuery("SELECT contest_id,label,score,display_order FROM contest_problems ORDER BY contest_id,display_order LIMIT 10")) {
+                        while (rs.next()) System.out.println("    contest=" + rs.getLong(1) + " " + rs.getString(2) + " score=" + rs.getInt(3) + " order=" + rs.getInt(4));
+                    }
+                }
                 default -> {
                     try (ResultSet rs = statement.executeQuery("SELECT status, COUNT(*) c FROM outbox_events GROUP BY status")) {
                         while (rs.next()) System.out.println("  " + rs.getString(1) + "=" + rs.getInt(2));

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { apiRequest, useAuth } from "../../lib/auth";
+import { useLanguage } from "../../lib/i18n";
+import { useSubmissionsMessages } from "../../lib/messages/submissions";
 import { BrandMark } from "../../components/brand-mark";
 import styles from "./page.module.css";
 
@@ -13,19 +15,7 @@ type Item = {
 };
 type Page = { items: Item[]; page: number; size: number; total: number };
 
-const statusText: Record<string, string> = {
-  PENDING: "排队中", RUNNING: "判题中", AC: "通过", WA: "答案错误",
-  CE: "编译错误", RE: "运行错误", TLE: "超出时间", MLE: "超出内存",
-};
 const terminal = new Set(["AC", "WA", "CE", "RE", "TLE", "MLE"]);
-const filters = [
-  { value: "", label: "全部" },
-  { value: "AC", label: "通过" },
-  { value: "WA", label: "答案错误" },
-  { value: "CE", label: "编译错误" },
-  { value: "RE", label: "运行错误" },
-  { value: "TLE", label: "超出时间" },
-];
 
 function time(value?: string) {
   if (!value) return "--";
@@ -35,10 +25,27 @@ function time(value?: string) {
 
 export default function SubmissionsPage() {
   const token = useAuth((state) => state.accessToken);
+  const { t: nav } = useLanguage();
+  const t = useSubmissionsMessages();
   const [data, setData] = useState<Page | null>(null);
   const [page, setPage] = useState(0);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+
+  const statusText: Record<string, string> = {
+    PENDING: t("submissions.status.PENDING"), RUNNING: t("submissions.status.RUNNING"),
+    AC: t("submissions.status.AC"), WA: t("submissions.status.WA"),
+    CE: t("submissions.status.CE"), RE: t("submissions.status.RE"),
+    TLE: t("submissions.status.TLE"), MLE: t("submissions.status.MLE"),
+  };
+  const filters = [
+    { value: "", label: t("submissions.filter.all") },
+    { value: "AC", label: t("submissions.filter.ac") },
+    { value: "WA", label: t("submissions.filter.wa") },
+    { value: "CE", label: t("submissions.filter.ce") },
+    { value: "RE", label: t("submissions.filter.re") },
+    { value: "TLE", label: t("submissions.filter.tle") },
+  ];
 
   useEffect(() => {
     if (!token) return;
@@ -47,7 +54,7 @@ export default function SubmissionsPage() {
     setError("");
     apiRequest<Page>(`/api/submissions?${query.toString()}`)
       .then(setData)
-      .catch((cause) => setError(cause instanceof Error ? cause.message : "加载提交记录失败"));
+      .catch((cause) => setError(cause instanceof Error ? cause.message : t("submissions.loadFailed")));
   }, [token, page, status]);
 
   const pageCount = data ? Math.max(1, Math.ceil(data.total / data.size)) : 1;
@@ -57,19 +64,20 @@ export default function SubmissionsPage() {
       <header className="app-topbar">
         <Link className="brand" href="/"><BrandMark />CodeAgent OJ</Link>
         <nav aria-label="主导航">
-          <Link href="/">主页</Link>
-          <Link href="/problems">题库</Link>
-          <Link href="/leaderboard">排行榜</Link>
-          <Link className="active" href="/submissions">提交记录</Link>
+          <Link href="/">{nav("nav.home")}</Link>
+          <Link href="/problems">{nav("nav.problems")}</Link>
+          <Link href="/leaderboard">{nav("nav.leaderboard")}</Link>
+          <Link href="/contests">{nav("nav.contests")}</Link>
+          <Link className="active" href="/submissions">{nav("nav.submissions")}</Link>
         </nav>
       </header>
 
       <section className={styles.wrap}>
         <div className={styles.heading}>
           <div>
-            <p className={styles.eyebrow}>SUBMISSIONS</p>
-            <h1>提交记录</h1>
-            <p>每一次提交的判题结果、用时与自动诊断都在这里，只显示你自己的记录。</p>
+            <p className={styles.eyebrow}>{nav("submissions.eyebrow")}</p>
+            <h1>{nav("submissions.title")}</h1>
+            <p>{t("submissions.desc")}</p>
           </div>
           <div className={styles.filters}>
             {filters.map((item) => (
@@ -80,15 +88,15 @@ export default function SubmissionsPage() {
           </div>
         </div>
 
-        {!token && <p className={styles.state}><Link href="/login">登录</Link>后查看你的提交记录。</p>}
+        {!token && <p className={styles.state}><Link href="/login">{t("submissions.loginLink")}</Link>{t("submissions.loginSuffix")}</p>}
         {error && <p className={styles.state}>{error}</p>}
-        {token && !data && !error && <p className={styles.state}>正在加载…</p>}
-        {data && data.items.length === 0 && !error && <p className={styles.state}>还没有提交记录，去<Link href="/problems">题库</Link>挑一道题开始练习。</p>}
+        {token && !data && !error && <p className={styles.state}>{t("submissions.loading")}</p>}
+        {data && data.items.length === 0 && !error && <p className={styles.state}>{t("submissions.emptyPrefix")}<Link href="/problems">{t("submissions.emptyLink")}</Link>{t("submissions.emptySuffix")}</p>}
 
         {data && data.items.length > 0 && <>
           <div className={styles.table}>
             <div className={styles.head}>
-              <span>题目</span><span>语言</span><span>状态</span><span>用时</span><span>内存</span><span>提交时间</span><span>诊断</span>
+              <span>{t("submissions.table.problem")}</span><span>{t("submissions.table.language")}</span><span>{t("submissions.table.status")}</span><span>{t("submissions.table.time")}</span><span>{t("submissions.table.memory")}</span><span>{t("submissions.table.createdAt")}</span><span>{t("submissions.table.diagnosis")}</span>
             </div>
             {data.items.map((item) => (
               <Link className={styles.row} key={item.id} href={`/submissions/${item.id}`}>
@@ -97,19 +105,19 @@ export default function SubmissionsPage() {
                 <span className={styles[`s_${terminal.has(item.status) ? item.status : "PENDING"}`] ?? styles.mono}>
                   {statusText[item.status] ?? item.status}
                 </span>
-                <span className={styles.mono}>{item.runtimeMs == null ? "--" : `${item.runtimeMs} ms`}</span>
-                <span className={styles.mono}>{item.memoryKb == null ? "--" : `${item.memoryKb} KB`}</span>
+                <span className={styles.mono}>{item.runtimeMs == null ? "--" : `${item.runtimeMs}${t("submissions.unit.ms")}`}</span>
+                <span className={styles.mono}>{item.memoryKb == null ? "--" : `${item.memoryKb}${t("submissions.unit.kb")}`}</span>
                 <span className={styles.mono}>{time(item.createdAt)}</span>
-                <span className={styles.diagnosed}>{item.diagnosed ? "有" : "—"}</span>
+                <span className={styles.diagnosed}>{item.diagnosed ? t("submissions.table.diagnosed") : "—"}</span>
               </Link>
             ))}
           </div>
 
           <div className={styles.pager}>
-            <span>共 {data.total} 条 · 第 {data.page + 1}/{pageCount} 页</span>
+            <span>{t("submissions.pager.prefix")}{data.total}{t("submissions.pager.middle")}{data.page + 1}/{pageCount}{t("submissions.pager.suffix")}</span>
             <div>
-              <button type="button" disabled={data.page <= 0} onClick={() => setPage((value) => Math.max(0, value - 1))}>上一页</button>
-              <button type="button" disabled={data.page + 1 >= pageCount} onClick={() => setPage((value) => value + 1)}>下一页</button>
+              <button type="button" disabled={data.page <= 0} onClick={() => setPage((value) => Math.max(0, value - 1))}>{t("submissions.pager.prev")}</button>
+              <button type="button" disabled={data.page + 1 >= pageCount} onClick={() => setPage((value) => value + 1)}>{t("submissions.pager.next")}</button>
             </div>
           </div>
         </>}

@@ -1,0 +1,18 @@
+.wrap{position:relative}
+.trigger{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 13px;border:1px solid #c9c7bf;color:#4f554f;background:transparent;font:700 12px inherit;cursor:pointer}
+.trigger:disabled{color:#a9a7a0;cursor:default}
+.trigger b{padding:1px 6px;color:#fff;background:#d37737;font:700 10px Consolas,monospace}
+.popover{position:absolute;top:38px;left:0;z-index:40;width:min(460px,90vw);border:1px solid #c9c7bf;background:#f7f5ef;box-shadow:0 8px 24px rgba(37,42,45,.12)}
+.search{width:100%;height:34px;padding:0 10px;border:0;border-bottom:1px solid #d8d5ce;background:#fff;font:12px inherit}
+.list{max-height:300px;overflow-y:auto}
+.row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid #e6e3db;cursor:pointer}
+.row:hover{background:#efede6}
+.rowDisabled{color:#a9a7a0;cursor:default}
+.row input{width:15px;height:15px;accent-color:#d37737}
+.copy{min-width:0}
+.copy b{display:block;font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy small{display:block;color:#858981;font:10px Consolas,monospace}
+.state{margin:0;padding:10px;color:#858981;font-size:11px;text-align:center}
+.footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-top:1px solid #d8d5ce;color:#858981;font:10px Consolas,monospace}
+.confirm{height:28px;padding:0 12px;border:1px solid #d37737;color:#fff;background:#d37737;font:700 11px inherit;cursor:pointer}
+.confirm:disabled{border-color:#d8d5ce;color:#a9a7a0;background:transparent;cursor:default}

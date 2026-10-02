@@ -1,0 +1,5 @@
+.wrap{position:fixed;top:12px;right:16px;z-index:60;display:flex;gap:2px;padding:2px;border:1px solid #c9c7bf;background:#ebe9e2}
+.button,.active{min-width:38px;height:24px;padding:0 8px;border:0;color:#6f736e;background:transparent;font:700 11px Consolas,monospace;cursor:pointer}
+.active{color:#fff;background:#d37737}
+.button:hover{color:#d37737}
+@media(max-width:1100px){.wrap{top:66px}}

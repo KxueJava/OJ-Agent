@@ -28,7 +28,7 @@ public class SecurityConfig {
     @Bean JwtDecoder jwtDecoder(SecretKey key) { return NimbusJwtDecoder.withSecretKey(key).build(); }
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource cors) throws Exception {
         http.csrf(csrf -> csrf.disable()).cors(c -> c.configurationSource(cors)).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/error", "/api/health", "/api/auth/register", "/api/auth/login", "/api/auth/refresh", "/api/auth/logout", "/api/problems/**", "/api/tags", "/api/leaderboard", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            .authorizeHttpRequests(auth -> auth.requestMatchers("/error", "/api/health", "/api/auth/register", "/api/auth/login", "/api/auth/refresh", "/api/auth/logout", "/api/problems/**", "/api/tags", "/api/leaderboard", "/api/contests", "/api/contests/**", "/api/discussions", "/api/discussions/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated())
             .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtRoleConverter())));
         return http.build();

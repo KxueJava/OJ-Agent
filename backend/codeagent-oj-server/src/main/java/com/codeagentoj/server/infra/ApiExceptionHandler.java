@@ -36,4 +36,17 @@ public class ApiExceptionHandler {
         detail.setProperty("errors", Map.of());
         return detail;
     }
+
+    /**
+     * ResponseStatusException（403/404/409 等）之前没有处理器，响应体里没有 detail 字段，
+     * 前端只能显示"请求失败（HTTP 409）"，看不到"状态为 CANCELLED 不能发布"这类真实原因。
+     */
+    @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
+    public ProblemDetail handleStatus(org.springframework.web.server.ResponseStatusException exception) {
+        ProblemDetail detail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(),
+                exception.getReason() == null ? exception.getStatusCode().toString() : exception.getReason());
+        detail.setTitle("Request rejected");
+        detail.setProperty("timestamp", Instant.now());
+        return detail;
+    }
 }

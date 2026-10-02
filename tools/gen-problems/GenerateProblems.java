@@ -28,8 +28,21 @@ public class GenerateProblems {
     static final Path BASE = Path.of("D:/workspace/OJ-Agent");
     static final Path BATCH_DIR = BASE.resolve("tools/gen-problems");
     static final Path WORK = BATCH_DIR.resolve("work");
-    static final Path MIGRATION = BASE.resolve("backend/codeagent-oj-server/src/main/resources/db/migration/V22__seed_70_problems.sql");
-    static final Path REPORT = BATCH_DIR.resolve("report.txt");
+    /** 默认批次文件 glob（正则）：可用 args[0] 覆盖 */
+    static final String DEFAULT_BATCH_GLOB = "batch-\\d+\\.json";
+    /** 默认输出迁移文件：可用 args[1] 覆盖（注意 V22 已被 Flyway 应用，新增批次务必换新文件名） */
+    static final Path DEFAULT_MIGRATION = BASE.resolve("backend/codeagent-oj-server/src/main/resources/db/migration/V22__seed_70_problems.sql");
+    /** 默认校验报告：可用 args[2] 覆盖 */
+    static final Path DEFAULT_REPORT = BATCH_DIR.resolve("report.txt");
+
+    /** 本次运行的批次 glob，默认与改造前一致 */
+    static String BATCH_GLOB = DEFAULT_BATCH_GLOB;
+    /** 本次运行的输出迁移文件，默认与改造前一致 */
+    static Path MIGRATION = DEFAULT_MIGRATION;
+    /** 本次运行的报告文件，默认与改造前一致 */
+    static Path REPORT = DEFAULT_REPORT;
+    /** new batch problem-id base; override with args[3]; must avoid ids already in DB */
+    static int BASE_ID = 1301;
 
     static final String JAVA_TEMPLATE = "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        // 从 stdin 读取输入，把答案打印到 stdout\n    }\n}\n";
 
@@ -67,6 +80,12 @@ public class GenerateProblems {
     static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static void main(String[] args) throws Exception {
+        // 可选参数：args[0]=批次 glob，args[1]=输出迁移文件，args[2]=报告文件；缺省时保持原默认值
+        if (args.length > 0) BATCH_GLOB = args[0];
+        if (args.length > 1) MIGRATION = Path.of(args[1]);
+        if (args.length > 2) REPORT = Path.of(args[2]);
+        if (args.length > 3) BASE_ID = Integer.parseInt(args[3]);
+
         List<Problem> problems = loadProblems();
         log("loaded problems = " + problems.size());
 
@@ -167,7 +186,7 @@ public class GenerateProblems {
     static List<Problem> loadProblems() throws IOException {
         List<Problem> problems = new ArrayList<>();
         List<Path> files = Files.list(BATCH_DIR)
-                .filter(path -> path.getFileName().toString().matches("batch-\\d+\\.json"))
+                .filter(path -> path.getFileName().toString().matches(BATCH_GLOB))
                 .sorted()
                 .collect(Collectors.toList());
         for (Path file : files) {
@@ -322,13 +341,13 @@ public class GenerateProblems {
         sql.add("-- 70 道新题（由 tools/gen-problems/GenerateProblems.java 生成）");
         sql.add("-- 期望输出全部来自真实编译并运行参考解的 stdout，因此题面/示例/判题数据与参考解四者自洽。");
         sql.add("");
-        sql.add("INSERT INTO tags (id, name, slug) VALUES " + TAGS.entrySet().stream()
+        sql.add("INSERT IGNORE INTO tags (id, name, slug) VALUES " + TAGS.entrySet().stream()
                 .filter(entry -> ((Integer) entry.getValue()[0]) >= 109)
                 .map(entry -> "(" + entry.getValue()[0] + ", '" + entry.getValue()[1] + "', '" + entry.getKey() + "')")
                 .collect(Collectors.joining(",")) + ";");
         sql.add("");
 
-        int id = 1201;
+        int id = BASE_ID;
         for (Problem problem : usable) {
             problem.id = id++;
             problem.versionId = problem.id + 1000;
@@ -356,7 +375,7 @@ public class GenerateProblems {
         sql.add("INSERT INTO problem_tags (problem_id, tag_id) VALUES " + String.join(",", tagRows) + ";");
         sql.add("");
 
-        int exampleId = 3201;
+        int exampleId = 3401;
         List<String> exampleRows = new ArrayList<>();
         for (Problem problem : usable) {
             int order = 1;
@@ -370,7 +389,7 @@ public class GenerateProblems {
         sql.add(String.join(",\n", exampleRows) + ";");
         sql.add("");
 
-        int caseId = 4201;
+        int caseId = 5001;
         List<String> caseRows = new ArrayList<>();
         for (Problem problem : usable) {
             for (Test test : problem.tests) {

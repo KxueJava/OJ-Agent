@@ -19,12 +19,18 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProblemService {
     private final JdbcTemplate jdbc;
     public ProblemService(JdbcTemplate jdbc) { this.jdbc = jdbc; }
-    public PageView list(String query, String difficulty, String tag, int page, int size, Long userId) {
+    public PageView list(String query, String difficulty, String tag, int page, int size, Long userId, boolean favoriteOnly) {
         page = Math.max(page, 0); size = Math.min(Math.max(size, 1), 50);
         StringBuilder where = new StringBuilder(" WHERE p.status = 'PUBLISHED'"); List<Object> args = new ArrayList<>();
         if (query != null && !query.isBlank()) { where.append(" AND (p.title LIKE ? OR p.slug LIKE ?)"); args.add("%" + query.trim() + "%"); args.add("%" + query.trim() + "%"); }
         if (difficulty != null && !difficulty.isBlank()) { where.append(" AND p.difficulty = ?"); args.add(difficulty); }
         if (tag != null && !tag.isBlank()) { where.append(" AND EXISTS (SELECT 1 FROM problem_tags pt JOIN tags t ON t.id=pt.tag_id WHERE pt.problem_id=p.id AND t.slug=?)"); args.add(tag); }
+        // 只看收藏（收藏页用）：必须登录，否则"我的收藏"无从谈起
+        if (favoriteOnly) {
+            if (userId == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "查看收藏需要先登录");
+            where.append(" AND EXISTS (SELECT 1 FROM problem_favorites f WHERE f.problem_id=p.id AND f.user_id=?)");
+            args.add(userId);
+        }
         long total = jdbc.queryForObject("SELECT COUNT(*) FROM problems p" + where, Long.class, args.toArray());
         String sql = "SELECT p.id,p.slug,p.title,p.difficulty, " + (userId == null ? "FALSE" : "EXISTS (SELECT 1 FROM problem_favorites f WHERE f.problem_id=p.id AND f.user_id=" + userId + ")") + " favorite FROM problems p" + where + " ORDER BY p.id LIMIT ? OFFSET ?";
         args.add(size); args.add(page * size);

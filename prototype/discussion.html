@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>讨论区 · CodeAgent OJ</title>
+<style>
+  :root{
+    --bg:#f3f1eb; --panel:#ebe9e2; --card:#f7f5ef; --line:#d8d5ce; --line-soft:#e6e3db;
+    --ink:#252a2d; --ink-2:#3f4540; --muted:#858981; --accent:#d37737; --accent-soft:#f7efe2;
+    --green:#277456; --green-soft:#eaf3ee; --amber:#95611e; --red:#a74743; --red-soft:#f7ecea;
+    --mono:"Consolas","SF Mono",Menlo,monospace;
+    --sans:"Avenir Next","Segoe UI","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.65 var(--sans)}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:var(--mono)}
+
+  /* ---------- 顶栏 ---------- */
+  .topbar{display:flex;align-items:center;gap:22px;padding:14px 28px;border-bottom:1px solid var(--line);background:var(--bg)}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-.01em}
+  .brand i{display:grid;place-items:center;width:24px;height:24px;border:1px solid var(--accent);color:var(--accent);font:700 11px var(--mono);font-style:normal;border-radius:4px}
+  .nav{display:flex;gap:18px;color:var(--muted);font-size:13px}
+  .nav a:hover{color:var(--ink)}
+  .nav a.active{color:var(--accent);font-weight:700}
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .lang{display:flex;border:1px solid var(--line)}
+  .lang span{padding:3px 9px;font:700 11px var(--mono);color:var(--muted)}
+  .lang span.on{background:var(--accent);color:#fff}
+  .avatar{width:30px;height:30px;border-radius:50%;background:#252a2d;color:#f3f1eb;display:grid;place-items:center;font:700 12px var(--mono)}
+
+  /* ---------- 页头 ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 28px 70px}
+  .kicker{margin:0 0 7px;color:var(--accent);font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+  h1{margin:0;font-size:28px;letter-spacing:-.04em}
+  .lead{margin:8px 0 0;color:var(--muted);font-size:12px;max-width:640px}
+
+  /* ---------- 工具条 ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:22px 0 14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .tabs{display:flex;gap:4px;padding:3px;border:1px solid var(--line);background:var(--panel)}
+  .tabs button{border:0;background:transparent;padding:7px 14px;color:var(--muted);font:600 12px var(--sans);cursor:pointer}
+  .tabs button.on{background:#252a2d;color:#f8f7f3}
+  .tabs button b{font:700 10px var(--mono);margin-left:6px;color:var(--accent)}
+  .search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;height:34px;padding:0 11px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+  .search input{flex:1;border:0;outline:0;background:transparent;font:13px var(--sans);color:var(--ink)}
+  select{height:34px;border:1px solid var(--line);background:var(--card);padding:0 10px;font:12px var(--sans);color:var(--ink-2)}
+  .btn{height:34px;padding:0 16px;border:1px solid var(--accent);background:var(--accent);color:#fff;font:700 12px var(--sans);cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--ink-2);border-color:var(--line)}
+
+  /* ---------- 主体两栏 ---------- */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
+
+  /* ---------- 帖子列表 ---------- */
+  .threads{border-top:2px solid var(--ink)}
+  .thread{display:grid;grid-template-columns:56px minmax(0,1fr) 132px;gap:14px;padding:14px 4px;border-bottom:1px solid var(--line-soft)}
+  .thread:hover{background:var(--card)}
+  .vote{display:grid;place-items:center;gap:2px;align-self:start;padding:6px 0;border:1px solid var(--line);background:var(--card);color:var(--muted);font:10px var(--mono);line-height:1.25}
+  .vote b{font:700 14px var(--mono);color:var(--ink)}
+  .t-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .t-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+  .t-title:hover{color:var(--accent)}
+  .badge{padding:2px 7px;border:1px solid var(--line);color:var(--muted);font:10px var(--mono);letter-spacing:.06em}
+  .badge.solution{border-color:#9fc4b1;color:var(--green);background:var(--green-soft)}
+  .badge.question{border-color:#d9b38f;color:var(--amber);background:var(--accent-soft)}
+  .badge.notice{border-color:var(--accent);color:var(--accent)}
+  .badge.pin{border-color:var(--ink);color:var(--ink)}
+  .t-meta{display:flex;align-items:center;gap:10px;margin-top:6px;color:var(--muted);font-size:11px}
+  .t-meta .who{color:var(--ink-2)}
+  .t-meta .tag{padding:1px 6px;border:1px solid var(--line);font:10px var(--mono)}
+  .unanswered{display:inline-flex;align-items:center;gap:5px;color:var(--red);font:10px var(--mono)}
+  .unanswered i{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block}
+  .t-stats{text-align:right;color:var(--muted);font:11px var(--mono);align-self:center}
+  .t-stats b{color:var(--ink)}
+
+  /* ---------- 右栏 ---------- */
+  .rail{display:grid;gap:18px}
+  .card{border:1px solid var(--line);background:var(--card);padding:14px 15px}
+  .card h3{margin:0 0 10px;font-size:12px;letter-spacing:.02em}
+  .card .k{padding:2px 7px;border:1px solid var(--line);background:var(--bg);font:10px var(--mono);color:var(--ink-2)}
+  .agent{border-color:#d9b38f;background:var(--accent-soft)}
+  .agent h3{color:var(--amber);display:flex;align-items:center;gap:7px}
+  .agent ul{margin:0;padding-left:17px;color:#6b5a45;font-size:12px}
+  .agent li{margin-bottom:6px}
+  .agent small{display:block;margin-top:8px;color:#8a5a15;font:10px var(--mono)}
+  .user{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--line-soft)}
+  .user:last-child{border-bottom:0}
+  .user .dot{width:22px;height:22px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font:700 10px var(--mono);color:var(--ink-2)}
+  .user small{margin-left:auto;color:var(--muted);font:10px var(--mono)}
+  .rules{margin:0;padding-left:16px;color:var(--muted);font-size:11.5px}
+  .rules li{margin-bottom:5px}
+  .pager{display:flex;gap:6px;margin-top:16px;justify-content:center}
+  .pager span{min-width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--line);background:var(--card);color:var(--ink-2);font:12px var(--mono)}
+  .pager span.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+
+  /* ---------- 帖子详情 ---------- */
+  .section-head{display:flex;align-items:baseline;gap:12px;margin:46px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .section-head h2{margin:0;font-size:19px;letter-spacing:-.02em}
+  .section-head small{color:var(--muted);font:10px var(--mono);letter-spacing:.1em}
+  .post{border:1px solid var(--line);background:var(--card);padding:18px 20px}
+  .post + .post{margin-top:12px}
+  .post-head{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line-soft)}
+  .post-head .who{font-weight:700}
+  .post-head small{color:var(--muted);font:10px var(--mono)}
+  .post-head .floor{margin-left:auto;color:var(--muted);font:10px var(--mono)}
+  .post-body{margin-top:12px;font-size:13px;color:var(--ink-2)}
+  .post-body p{margin:0 0 10px}
+  .post-body ul{margin:0 0 10px;padding-left:20px}
+  pre{margin:0 0 12px;padding:12px 14px;background:#252a2d;color:#e8e6df;font:12px/1.65 var(--mono);overflow-x:auto;white-space:pre}
+  pre .k{color:#e2a078}
+  code{font:12px var(--mono);background:var(--panel);padding:1px 5px;color:#8a4a1e;border-radius:3px}
+  .reply-bar{display:flex;align-items:center;gap:14px;margin-top:14px;color:var(--muted);font:11px var(--mono)}
+  .reply-bar button{border:1px solid var(--line);background:transparent;padding:4px 10px;color:var(--ink-2);font:11px var(--mono);cursor:pointer}
+  .composer{margin-top:14px;border:1px solid var(--line);background:var(--card)}
+  .composer textarea{width:100%;min-height:88px;border:0;border-bottom:1px solid var(--line-soft);background:#fff;padding:12px;font:13px/1.6 var(--sans);outline:0;resize:vertical}
+  .composer-foot{display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--muted);font:10px var(--mono)}
+  .composer-foot .btn{margin-left:auto}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr} .thread{grid-template-columns:44px minmax(0,1fr)} .t-stats{display:none} }
+</style>
+</head>
+<body>
+
+<!-- ============ 顶栏 ============ -->
+<header class="topbar">
+  <a class="brand" href="#"><i>N</i>CodeAgent OJ</a>
+  <nav class="nav">
+    <a href="#">主页</a>
+    <a href="#">题库</a>
+    <a href="#">收藏</a>
+    <a href="#">排行榜</a>
+    <a href="#">竞赛</a>
+    <a href="#">提交记录</a>
+    <a href="#" class="active">讨论区</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang"><span class="on">中文</span><span>EN</span></div>
+    <div class="avatar">N</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="kicker">DISCUSSION</p>
+  <h1>讨论区</h1>
+  <p class="lead">提问、题解与公告都在这里。发帖时可以关联题目，回复会被自动归类；Agent 只会做只读摘要，不会替你回答。</p>
+
+  <!-- ============ 工具条 ============ -->
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="on">全部 <b>248</b></button>
+      <button>题解 <b>96</b></button>
+      <button>提问 <b>121</b></button>
+      <button>公告 <b>18</b></button>
+      <button>闲聊 <b>13</b></button>
+    </div>
+    <label class="search">
+      <span class="mono">⌕</span>
+      <input placeholder="搜索标题、正文、题目 slug（如 two-sum）" />
+    </label>
+    <select><option>最新回复</option><option>最新发布</option><option>最多浏览</option><option>未回复优先</option></select>
+    <button class="btn">发布新帖</button>
+  </div>
+
+  <div class="grid">
+    <!-- ============ 帖子列表 ============ -->
+    <main>
+      <div class="threads">
+
+        <article class="thread">
+          <div class="vote"><span>▲</span><b>42</b><span>▼</span></div>
+          <div>
+            <div class="t-head">
+              <span class="badge pin">置顶</span>
+              <span class="badge notice">公告</span>
+              <a class="t-title" href="#thread">国庆训练赛成绩与题解已发布（含罚时口径说明）</a>
+            </div>
+            <div class="t-meta">
+              <span class="who">官方</span><span>·</span><span>2 天前</span>
+              <span class="tag">公告</span>
+            </div>
+          </div>
+          <div class="t-stats"><b>890</b> 浏览<br />3 回复 · 2 天前</div>
+        </article>
+
+        <article class="thread">
+          <div class="vote"><span>▲</span><b>36</b><span>▼</span></div>
+          <div>
+            <div class="t-head">
+              <span class="badge solution">题解</span>
+              <a class="t-title" href="#thread">两数之和：为什么哈希表能做到 O(n)，以及三个边界陷阱</a>
+            </div>
+            <div class="t-meta">
+              <span class="who">kkk</span><span>·</span><span>2 小时前</span>
+              <span class="tag">two-sum</span><span class="tag">hash-table</span>
+            </div>
+          </div>
+          <div class="t-stats"><b>340</b> 浏览<br />12 回复 · 2 小时前</div>
+        </article>
+
+        <article class="thread">
+          <div class="vote"><span>▲</span><b>18</b><span>▼</span></div>
+          <div>
+            <div class="t-head">
+              <span class="badge solution">题解</span>
+              <a class="t-title" href="#thread">区间 DP 的两种写法对比：记忆化 vs 递推（附可提交模板）</a>
+            </div>
+            <div class="t-meta">
+              <span class="who">县城の鼠</span><span>·</span><span>1 天前</span>
+              <span class="tag">merge-stones-minimum-total-cost</span><span class="tag">dynamic-programming</span>
+            </div>
+          </div>
+          <div class="t-stats"><b>512</b> 浏览<br />21 回复 · 1 天前</div>
+        </article>
+
+        <article class="thread">
+          <div class="vote"><span>▲</span><b>9</b><span>▼</span></div>
+          <div>
+            <div class="t-head">
+              <span class="badge question">提问</span>
+              <a class="t-title" href="#thread">二分查找里 mid = (lo + hi) / 2 为什么会溢出？</a>
+            </div>
+            <div class="t-meta">
+              <span class="who">newbie2026</span><span>·</span><span>5 小时前</span>
+              <span class="tag">binary-search</span><span class="badge" style="border-color:#9fc4b1;color:var(--green);background:var(--green-soft)">已解决</span>
+            </div>
+          </div>
+          <div class="t-stats"><b>210</b> 浏览<br />8 回复 · 5 小时前</div>
+        </article>
+
+        <article class="thread">
+          <div class="vote"><span>▲</span><b>2</b><span>▼</span></div>
+          <div>
+            <div class="t-head">
+              <span class="badge question">提问</span>
+              <a class="t-title" href="#thread">提交报 RE，但本地跑样例没问题，应该怎么定位？</a>
+            </div>
+            <div class="t-meta">
+              <span class="who">li-ming</span><span>·</span><span>3 小时前</span>
+              <span class="unanswered"><i></i>还没有人回复</span>
+            </div>
+          </div>
+          <div class="t-stats"><b>46</b> 浏览<br />0 回复 · 3 小时前</div>
+        </article>
+
+        <article class="thread">
+          <div class="vote"><span>▲</span><b>15</b><span>▼</span></div>
+          <div>
+            <div class="t-head">
+              <span class="badge">闲聊</span>
+              <a class="t-title" href="#thread">大家平时用什么写 Java？IDE 还是 VS Code + 插件</a>
+            </div>
+            <div class="t-meta">
+              <span class="who">ada</span><span>·</span><span>1 天前</span>
+            </div>
+          </div>
+          <div class="t-stats"><b>670</b> 浏览<br />35 回复 · 1 天前</div>
+        </article>
+
+      </div>
+
+      <div class="pager">
+        <span>上一页</span><span class="on">1</span><span>2</span><span>3</span><span>4</span><span>…</span><span>13</span><span>下一页</span>
+      </div>
+    </main>
+
+    <!-- ============ 右栏 ============ -->
+    <aside class="rail">
+      <section class="card agent">
+        <h3>✦ AGENT 摘要</h3>
+        <ul>
+          <li>本周提问集中在 <b>二分查找边界</b>（8 帖）与 <b>区间 DP 状态定义</b>（5 帖）。</li>
+          <li>「两数之和」的 3 个高频坑：先查后存、重复元素、下标顺序。</li>
+          <li>有 <b>1 个提问</b>超过 24 小时没人回复，建议置顶到「待解决」。</li>
+        </ul>
+        <small>由 Agent 汇总公开帖子生成 · 只读 · 不参与回答</small>
+      </section>
+
+      <section class="card">
+        <h3>热门标签</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="k">hash-table × 34</span><span class="k">binary-search × 29</span>
+          <span class="k">dynamic-programming × 26</span><span class="k">greedy × 18</span>
+          <span class="k">graph × 12</span><span class="k">math × 11</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>活跃用户（近 7 天）</h3>
+        <div class="user"><span class="dot">K</span><span>kkk</span><small>14 帖</small></div>
+        <div class="user"><span class="dot">县</span><span>县城の鼠</span><small>11 帖</small></div>
+        <div class="user"><span class="dot">A</span><span>ada</span><small>9 帖</small></div>
+        <div class="user"><span class="dot">L</span><span>li-ming</span><small>6 帖</small></div>
+      </section>
+
+      <section class="card">
+        <h3>发帖须知</h3>
+        <ul class="rules">
+          <li>题解请写清<b>思路来源</b>，不要只贴代码。</li>
+          <li>提问请附上 <b>语言、错误信息、题目链接</b>。</li>
+          <li>竞赛期间<b>禁止发布赛题讨论</b>（会被自动隐藏）。</li>
+          <li>禁止灌水与人身攻击；违规帖会被锁定或删除。</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <!-- ============ 帖子详情视图 ============ -->
+  <div class="section-head" id="thread">
+    <small>THREAD</small>
+    <h2>帖子详情视图</h2>
+    <small style="margin-left:auto">示例：一个「提问」帖的完整读取与回复形态</small>
+  </div>
+
+  <article class="post">
+    <div class="post-head">
+      <span class="badge question">提问</span>
+      <span class="who">newbie2026</span>
+      <small>5 小时前</small>
+      <span class="tag mono" style="padding:1px 6px;border:1px solid var(--line)">binary-search</span>
+      <span class="floor">#1 楼主</span>
+    </div>
+    <div class="post-body">
+      <p>题目：<code>binary-search</code>，输入是 <code>[-1,0,3,5,9,12] 9</code> 这种「数组 + 目标值」的格式。</p>
+      <p>我写的循环是这样的，样例能过，但提交后有几个测试点答案不对：</p>
+      <pre><span class="k">while</span> (lo &lt;= hi) {
+    <span class="k">int</span> mid = (lo + hi) / 2;
+    <span class="k">if</span> (a[mid] == target) <span class="k">return</span> mid;
+    <span class="k">if</span> (a[mid] &lt; target) lo = mid + 1; <span class="k">else</span> hi = mid - 1;
+}</pre>
+      <p>想确认两件事：① <code>(lo + hi) / 2</code> 在什么情况下会溢出？② 我这样写会不会漏掉右端点？</p>
+    </div>
+    <div class="reply-bar">
+      <button>▲ 有用 9</button><button>引用</button><button>举报</button>
+      <span style="margin-left:auto">最后编辑 4 小时前</span>
+    </div>
+  </article>
+
+  <article class="post" style="border-color:#d9b38f;background:var(--accent-soft)">
+    <div class="post-head" style="border-color:#e8d6bd">
+      <span class="badge" style="border-color:#d9b38f;color:var(--amber);background:transparent">AGENT 摘要</span>
+      <small>只读 · 基于公开回复生成</small>
+      <span class="floor">全帖 8 回复</span>
+    </div>
+    <div class="post-body" style="color:#6b5a45">
+      <ul>
+        <li>溢出只在 <code>lo + hi</code> 超过 <code>int</code> 上限时发生，本题数据范围内不会；但改成 <code>lo + (hi - lo) / 2</code> 是安全写法。</li>
+        <li>你贴的循环<b>不会漏掉右端点</b>，<code>hi = mid - 1</code> 与 <code>lo = mid + 1</code> 的配对是正确的。</li>
+        <li>答案不对的原因更可能在<b>输入解析</b>：题目改成空格分隔后，<code>split(";")</code> 这类旧写法会解析失败。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-head">
+      <span class="who">kkk</span>
+      <small>4 小时前</small>
+      <span class="badge" style="border-color:#9fc4b1;color:var(--green);background:var(--green-soft)">题解作者</span>
+      <span class="floor">#2</span>
+    </div>
+    <div class="post-body">
+      <p>补充第 ③ 点：<code>mid</code> 用 <code>lo + (hi - lo) / 2</code> 可以避免 <code>lo + hi</code> 溢出，且向下取整的行为与 <code>(lo + hi) / 2</code> 一致。</p>
+      <p>另外注意本题输出格式：目标值不存在时输出 <code>-1</code>，不要输出 <code>null</code> 或空行。</p>
+    </div>
+    <div class="reply-bar"><button>▲ 有用 12</button><button>引用</button><button>举报</button><span style="margin-left:auto">已采纳</span></div>
+  </article>
+
+  <div class="composer">
+    <textarea placeholder="写下你的回复…支持 Markdown 与代码块（```java）。提问请附上错误信息。"></textarea>
+    <div class="composer-foot">
+      <label><input type="checkbox" checked /> 回复时通知楼主</label>
+      <span>Shift + Enter 换行</span>
+      <button class="btn">发布回复</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

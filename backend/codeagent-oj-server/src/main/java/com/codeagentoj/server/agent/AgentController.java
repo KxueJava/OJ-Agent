@@ -41,6 +41,101 @@ public class AgentController {
     private final OutputSafety outputSafety;
     private final ObjectMapper mapper;
     private final Object[] tools;
+    /** 竞赛期间禁用 Agent：字段注入以避免改动那个很长的构造签名。 */
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.codeagentoj.server.contest.ContestService contests;
+
+    /**
+     * G6 会话历史：我在这道题上问过什么。
+     * 会话按 (user, problemVersion) 唯一，所以这里实际是"每题一段对话"的列表。
+     */
+    @GetMapping("/sessions") public ApiResponse<java.util.List<java.util.Map<String, Object>>> sessions(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) return ApiResponse.ok(java.util.List.of());
+        return ApiResponse.ok(jdbc.queryForList(
+                "SELECT s.id AS id, s.problem_version_id AS problemVersionId, s.updated_at AS updatedAt, "
+                        + "(SELECT COUNT(*) FROM agent_messages m WHERE m.session_id=s.id) AS messageCount, "
+                        + "(SELECT LEFT(m.content,80) FROM agent_messages m WHERE m.session_id=s.id ORDER BY m.seq DESC LIMIT 1) AS lastPreview, "
+                        + "(SELECT p.slug FROM problem_versions pv JOIN problems p ON p.id=pv.problem_id WHERE pv.id=s.problem_version_id) AS problemSlug, "
+                        + "(SELECT p.title FROM problem_versions pv JOIN problems p ON p.id=pv.problem_id WHERE pv.id=s.problem_version_id) AS problemTitle "
+                        + "FROM agent_sessions s WHERE s.user_id=? ORDER BY s.updated_at DESC LIMIT 50", Long.parseLong(jwt.getSubject())));
+    }
+
+    /** 某段会话的全部消息（含是哪个 Agent 回答、以及是否进入了模型上下文）。仅限本人。 */
+    @GetMapping("/sessions/{id}") public ApiResponse<java.util.List<java.util.Map<String, Object>>> sessionMessages(@PathVariable long id, @AuthenticationPrincipal Jwt jwt) {
+        long userId = Long.parseLong(jwt.getSubject());
+        Integer owned = jdbc.queryForObject("SELECT COUNT(*) FROM agent_sessions WHERE id=? AND user_id=?", Integer.class, id, userId);
+        if (owned == null || owned == 0) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "会话不存在");
+        }
+        return ApiResponse.ok(jdbc.queryForList(
+                "SELECT m.role AS role, m.agent AS agent, m.content AS content, m.safety_status AS safetyStatus, "
+                        + "m.in_memory AS inMemory, m.created_at AS createdAt FROM agent_messages m "
+                        + "WHERE m.session_id=? ORDER BY m.seq", id));
+    }
+
+    /**
+     * 清空一段会话的消息（保留会话行与历史诊断 findings，避免连带删掉用户看过的诊断内容）。
+     * 返回清掉的消息条数。
+     */
+    @DeleteMapping("/sessions/{id}") public ApiResponse<java.util.Map<String, Object>> clearSession(@PathVariable long id, @AuthenticationPrincipal Jwt jwt) {
+        long userId = Long.parseLong(jwt.getSubject());
+        Integer owned = jdbc.queryForObject("SELECT COUNT(*) FROM agent_sessions WHERE id=? AND user_id=?", Integer.class, id, userId);
+        if (owned == null || owned == 0) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "会话不存在");
+        }
+        jdbc.update("DELETE FROM agent_tool_calls WHERE session_id=?", id);
+        jdbc.update("DELETE FROM agent_audits WHERE session_id=?", id);
+        int cleared = jdbc.update("DELETE FROM agent_messages WHERE session_id=?", id);
+        jdbc.update("UPDATE agent_sessions SET updated_at=NOW() WHERE id=?", id);
+        return ApiResponse.ok(java.util.Map.of("cleared", cleared));
+    }
+
+    /** 今日 Agent 用量（G4）：前端据此显示剩余次数并解释 429。 */
+    @GetMapping("/usage") public ApiResponse<java.util.Map<String, Object>> usage(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) return ApiResponse.ok(java.util.Map.of("used", 0, "limit", 0, "remaining", 0, "message", "未登录"));
+        return ApiResponse.ok(usageService.usage(Long.parseLong(jwt.getSubject())));
+    }
+
+    /**
+     * Agent 部署自检（G1）：模型 key 是否已配置 —— 部署后一眼就能看出 Agent 能不能用，
+     * 不必先发一条消息试。**只返回布尔与提示，不暴露密钥内容**。需登录（避免匿名探测）。
+     */
+    @GetMapping("/health") public ApiResponse<java.util.Map<String, Object>> health() {
+        boolean ready = deepSeek.configured();
+        return ApiResponse.ok(java.util.Map.of(
+                "configured", ready,
+                "message", ready ? "模型已配置" : "未配置模型 API Key：设置 DEEPSEEK_API_KEY 后重启服务"));
+    }
+
+    /** G4：每人每日用量（配额表见 V31）。字段注入，同样避免改动那个很长的构造签名。 */
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.codeagentoj.server.agent.AgentUsageService usageService;
+
+    /**
+     * 入口守卫（两道）：
+     * ① 赛中锁：已报名 + 比赛进行中 + **这道题是该场赛题** → 403；
+     * ② 每日配额：超过 {@code app.agent.daily-limit}（默认 20）→ 429。
+     * 顺序上先判锁再计配额，避免被拒绝的请求白白消耗次数。
+     */
+    private void guard(org.springframework.security.oauth2.jwt.Jwt jwt, Long problemVersion) {
+        if (jwt == null) return;
+        long userId = Long.parseLong(jwt.getSubject());
+        if (contests != null) {
+            String slug = contests.lockedContestSlugForVersion(userId, problemVersion);
+            if (slug != null) {
+                throw new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.FORBIDDEN, "比赛进行中（" + slug + "），禁止使用 Agent 助手");
+            }
+        }
+        if (usageService != null) {
+            int used = usageService.consume(userId);
+            if (used > usageService.dailyLimit()) {
+                throw new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.TOO_MANY_REQUESTS,
+                        "今日 Agent 调用已达上限（" + usageService.dailyLimit() + " 次），明天 0 点重置");
+            }
+        }
+    }
     public AgentController(JdbcTemplate jdbc, DeepSeekClient deepSeek, ChatMemory chatMemory, AgentMessageRepository messages,
                            OutputSafety outputSafety, ObjectMapper mapper,
                            ProblemTools problemTools, SubmissionTools submissionTools, LearningTools learningTools) {
@@ -54,6 +149,7 @@ public class AgentController {
 
     @PostMapping("/ask")
     public ApiResponse<Reply> ask(@Valid @RequestBody Ask request, @AuthenticationPrincipal Jwt jwt) {
+        guard(jwt, request.problemVersion());
         long user = userId(jwt); long session = session(user, request.problemVersion());
         String intent = intent(request.message()); String route = route(intent);
         boolean blocked = AgentPolicy.blocked(request.message()); String safety = blocked ? "BLOCKED" : "PASSED";
@@ -74,6 +170,7 @@ public class AgentController {
 
     @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream(@Valid @RequestBody Ask request, @AuthenticationPrincipal Jwt jwt) {
+        guard(jwt, request.problemVersion());
         SseEmitter emitter = new SseEmitter(Duration.ofMinutes(2).toMillis());
         long user = userId(jwt); long session = session(user, request.problemVersion());
         String intent = intent(request.message()); String route = route(intent);

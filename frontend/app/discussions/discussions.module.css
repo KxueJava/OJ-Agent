@@ -1,0 +1,60 @@
+.page{min-height:100dvh;background:#f3f1eb;color:#252a2d;font:13px/1.65 "Avenir Next","Segoe UI","Microsoft YaHei",sans-serif}
+.topbar{display:flex;align-items:center;gap:22px;padding:14px 28px;border-bottom:1px solid #d8d5ce}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;color:inherit;text-decoration:none}
+.brand i{display:grid;place-items:center;width:24px;height:24px;border:1px solid #d37737;color:#d37737;font:700 11px Consolas,monospace;font-style:normal;border-radius:4px}
+.nav{display:flex;gap:18px;color:#858981;font-size:13px}
+.nav a{color:inherit;text-decoration:none}
+.nav a:hover{color:#252a2d}
+.nav a.active{color:#d37737;font-weight:700}
+.topRight{margin-left:auto;display:flex;align-items:center;gap:12px;color:#858981;font-size:12px}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 28px 70px}
+.kicker{margin:0 0 7px;color:#d37737;font:10px Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+.wrap h1{margin:0;font-size:28px;letter-spacing:-.04em}
+.lead{margin:8px 0 0;color:#858981;font-size:12px;max-width:640px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:22px 0 14px;padding-bottom:14px;border-bottom:1px solid #d8d5ce}
+.tabs{display:flex;gap:4px;padding:3px;border:1px solid #d8d5ce;background:#ebe9e2}
+.tabs button{border:0;background:transparent;padding:7px 13px;color:#858981;font:600 12px inherit;cursor:pointer}
+.tabs button.on{background:#252a2d;color:#f8f7f3}
+.search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;height:34px;padding:0 11px;border:1px solid #d8d5ce;background:#f7f5ef}
+.search input{flex:1;border:0;outline:0;background:transparent;font:13px inherit;color:#252a2d}
+.sort{height:34px;border:1px solid #d8d5ce;background:#f7f5ef;padding:0 10px;font:12px inherit;color:#3f4540}
+.btn{height:34px;padding:0 16px;border:1px solid #d37737;background:#d37737;color:#fff;font:700 12px inherit;cursor:pointer}
+.btn:disabled{border-color:#d8d5ce;background:transparent;color:#a9a7a0;cursor:default}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
+.threads{border-top:2px solid #252a2d}
+.thread{display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:14px;padding:14px 6px;border-bottom:1px solid #e6e3db}
+.thread:hover{background:#f7f5ef}
+.tHead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tTitle{font-size:15px;font-weight:700;color:#252a2d;text-decoration:none;letter-spacing:-.01em}
+.tTitle:hover{color:#d37737}
+.badge{padding:2px 7px;border:1px solid #d8d5ce;color:#858981;font:10px Consolas,monospace;letter-spacing:.06em}
+.badgeSolution{border-color:#9fc4b1;color:#277456;background:#eaf3ee}
+.badgeQuestion{border-color:#d9b38f;color:#95611e;background:#f7efe2}
+.badgeNotice{border-color:#d37737;color:#d37737}
+.badgePin{border-color:#252a2d;color:#252a2d}
+.badgeAccepted{border-color:#9fc4b1;color:#277456}
+.tMeta{display:flex;align-items:center;gap:10px;margin-top:6px;color:#858981;font-size:11px;flex-wrap:wrap}
+.tag{padding:1px 6px;border:1px solid #d8d5ce;font:10px Consolas,monospace;color:#3f4540}
+.tStats{text-align:right;color:#858981;font:11px Consolas,monospace;align-self:center}
+.tStats b{color:#252a2d}
+.empty{padding:22px;border:1px solid #d8d5ce;background:#f7f5ef;color:#858981;text-align:center}
+.error{margin:14px 0 0;padding:9px 12px;border-left:3px solid #d37737;background:#f7efe2;color:#8a5a15;font-size:12px}
+.rail{display:grid;gap:18px}
+.card{border:1px solid #d8d5ce;background:#f7f5ef;padding:14px 15px}
+.card h3{margin:0 0 10px;font-size:12px}
+.card .k{padding:2px 7px;border:1px solid #d8d5ce;background:#f3f1eb;font:10px Consolas,monospace;color:#3f4540}
+.rules{margin:0;padding-left:16px;color:#858981;font-size:11.5px}
+.rules li{margin-bottom:5px}
+.composer{margin:16px 0 0;border:1px solid #d8d5ce;background:#f7f5ef;padding:14px}
+.composer h3{margin:0 0 10px;font-size:13px}
+.composerRow{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.composer input,.composer select,.composer textarea{border:1px solid #c9c7bf;background:#fff;padding:8px 10px;font:13px inherit;color:#252a2d;outline:0}
+.composer input{flex:1;min-width:200px}
+.composer textarea{width:100%;min-height:96px;resize:vertical;line-height:1.6}
+.composerFoot{display:flex;align-items:center;gap:10px;margin-top:10px;color:#858981;font:10px Consolas,monospace}
+.composerFoot .btn{margin-left:auto}
+.pager{display:flex;gap:6px;margin-top:16px;justify-content:center}
+.pager button{min-width:34px;height:30px;border:1px solid #d8d5ce;background:#f7f5ef;color:#3f4540;font:12px Consolas,monospace;cursor:pointer}
+.pager button:disabled{color:#c2bfb8;cursor:default}
+.pager span{display:grid;place-items:center;min-width:34px;height:30px;color:#858981;font:12px Consolas,monospace}
+@media (max-width:900px){.grid{grid-template-columns:1fr}.tStats{display:none}}

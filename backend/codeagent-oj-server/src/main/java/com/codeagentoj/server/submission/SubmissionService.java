@@ -46,7 +46,14 @@ public class SubmissionService {
         limiter.record(userId,now);
         String language=canonicalLanguage(req.language());
         Map<String,Object> version = jdbc.queryForList("SELECT pv.id,pv.problem_id,p.status FROM problem_versions pv JOIN problems p ON p.id=pv.problem_id WHERE pv.id=? AND pv.status='PUBLISHED' AND p.status='PUBLISHED'",req.problemVersion()).stream().findFirst().orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,"题目版本不可提交"));
-        long id=nextId(); jdbc.update("INSERT INTO submissions (id,user_id,problem_id,problem_version_id,language,source_code,status) VALUES (?,?,?,?,?,?,?)",id,userId,version.get("problem_id"),req.problemVersion(),language,req.sourceCode(),"PENDING");
+        // 竞赛归属：正在进行、且本人已报名的比赛，本次提交计入该场（一场比赛同一时刻只能有一个）
+        // 只有"已报名 + 比赛进行中 + 这道题正是该场赛题"才归属到竞赛：
+        // 早期版本少了 contest_problems 这一环，导致赛中做普通题也被打上 contest_id，
+        // 进而被自动诊断当成"赛中提交"跳过（用户实测反馈）。
+        Long contestId=jdbc.queryForList("SELECT c.id FROM contests c JOIN contest_participants p ON p.contest_id=c.id "
+                + "JOIN contest_problems cp ON cp.contest_id=c.id AND cp.problem_id=? "
+                + "WHERE p.user_id=? AND c.status='RUNNING' AND NOW()>=c.start_at AND NOW()<c.end_at LIMIT 1",Long.class,version.get("problem_id"),userId).stream().findFirst().orElse(null);
+        long id=nextId(); jdbc.update("INSERT INTO submissions (id,user_id,problem_id,problem_version_id,language,source_code,status,contest_id) VALUES (?,?,?,?,?,?,?,?)",id,userId,version.get("problem_id"),req.problemVersion(),language,req.sourceCode(),"PENDING",contestId);
         try { jdbc.update("INSERT INTO outbox_events (id,aggregate_id,event_type,payload_json) VALUES (?,?,?,?)",nextId(),id,"SUBMISSION_CREATED",mapper.writeValueAsString(Map.of("submissionId",id,"language",language,"problemVersionId",req.problemVersion()))); } catch(JsonProcessingException e){ throw new IllegalStateException(e); }
         return summary(id,userId);
     }
@@ -66,9 +73,21 @@ public class SubmissionService {
         return summary(id,userId);
     }
 
+    /** 我解出（有过 AC）的题目 slug 列表：题库页据此标记"已通过"。 */
+    public List<String> solvedProblemSlugs(long userId) {
+        return jdbc.queryForList("SELECT DISTINCT p.slug FROM submissions s JOIN problems p ON p.id=s.problem_id "
+                + "WHERE s.user_id=? AND s.status='AC' ORDER BY p.slug", String.class, userId);
+    }
+
     /** 管理员按题目版本批量重判：改过测试数据或升级沙箱后使用。 */
     @Transactional public int rejudgeByVersion(long problemVersionId,int limit){
         List<Long> ids=jdbc.queryForList("SELECT id FROM submissions WHERE problem_version_id=? AND status IN ('AC','WA','CE','RE','TLE','MLE') ORDER BY created_at DESC LIMIT ?",Long.class,problemVersionId,Math.max(1,Math.min(500,limit)));
+        int count=0; for(Long id:ids){ if(reset(id,null)==1) count++; } return count;
+    }
+
+    /** 竞赛内批量重判（P5）：比赛期间发现数据问题或赛后修正口径时使用，只重判该场归属的提交。 */
+    @Transactional public int rejudgeByContest(long contestId,int limit){
+        List<Long> ids=jdbc.queryForList("SELECT id FROM submissions WHERE contest_id=? AND status IN ('AC','WA','CE','RE','TLE','MLE') ORDER BY created_at ASC LIMIT ?",Long.class,contestId,Math.max(1,Math.min(1000,limit)));
         int count=0; for(Long id:ids){ if(reset(id,null)==1) count++; } return count;
     }
 

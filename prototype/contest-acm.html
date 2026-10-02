@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CodeAgent OJ / 2026 秋季周赛 #07</title>
+  <style>
+    :root{--bg:#f3f1eb;--bar:#ebe9e2;--panel:#ebe9e2;--ink:#252a2d;--muted:#858981;--line:#d8d5ce;--orange:#d37737;--orange-soft:#f7efe2;--green:#277456;--red:#a74743;--gold:#95611e;--sans:"Avenir Next","Segoe UI","Microsoft YaHei",sans-serif;--mono:Consolas,monospace}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--sans)}
+    a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+    .topbar{height:62px;display:flex;align-items:center;gap:26px;padding:0 max(20px,calc((100% - 1240px)/2));border-bottom:1px solid var(--line);background:var(--bar)}
+    .brand{display:flex;align-items:center;gap:7px;color:var(--ink);font-size:15px;font-weight:750;letter-spacing:-.02em}
+    .brand svg{display:block;width:31px;height:20px;shape-rendering:crispEdges}
+    nav{display:flex;align-self:stretch;gap:4px}
+    nav a{display:flex;align-items:center;padding:0 10px;border-bottom:2px solid transparent;color:#536278;font-size:13px;font-weight:650}
+    nav a.active{border-bottom-color:var(--orange);color:var(--orange)}
+    .lang{margin-left:auto;display:flex;gap:2px;padding:2px;border:1px solid #c9c7bf;background:#f3f1eb}
+    .lang b,.lang i{min-width:36px;padding:3px 7px;font:700 11px var(--mono);font-style:normal;text-align:center;color:var(--muted)}
+    .lang b{color:#fff;background:var(--orange)}
+    .wrap{width:min(1240px,calc(100% - 40px));margin:auto;padding:16px 0 72px}
+    .statebar{display:flex;align-items:center;gap:8px;margin:14px 0 26px;padding:9px 12px;border:1px dashed #c9c7bf;color:var(--muted);font:11px var(--mono)}
+    .statebar button{padding:4px 10px;border:1px solid #c9c7bf;color:#4f554f;background:transparent;font:11px var(--mono)}
+    .statebar button.on{border-color:var(--orange);color:#fff;background:var(--orange)}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:54px;align-items:end;padding-bottom:26px;border-bottom:1px solid var(--line)}
+    .eyebrow{margin:0 0 10px;color:var(--orange);font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+    .hero h1{margin:0;font-size:clamp(30px,4vw,44px);line-height:1.02;letter-spacing:-.055em}
+    .hero p.lead{max-width:620px;margin:13px 0 0;color:var(--muted);font-size:13px}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+    .chip{padding:4px 8px;border:1px solid #c9c7bf;color:#5d625d;background:#f7f5ef;font:11px var(--mono)}
+    .chip.orange{border-color:#d9b38f;color:var(--gold);background:var(--orange-soft)}
+    .live{padding-left:24px;border-left:1px solid var(--line)}
+    .live-label{display:flex;align-items:center;gap:7px;color:var(--muted);font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+    .live-label i{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+    .live.on .live-label{color:var(--green)}.live.on .live-label i{background:var(--green);animation:pulse 1.8s ease-in-out infinite}
+    .live.done .live-label{color:var(--red)}.live.done .live-label i{background:var(--red)}
+    .countdown{margin-top:8px;font:700 33px var(--mono);letter-spacing:-.07em}
+    .live-meta{margin-top:3px;color:var(--muted);font-size:11px}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+    .actions button,.actions a{display:inline-flex;align-items:center;height:38px;padding:0 16px;border:1px solid #c9c7bf;color:#4f554f;background:transparent;font-size:12px;font-weight:700}
+    .actions .primary{border-color:var(--orange);color:#fff;background:var(--orange)}
+    .actions .ghost{border-style:dashed;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.8fr);gap:48px;margin-top:34px}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px}
+    .section-head h2{margin:0;font-size:19px;letter-spacing:-.03em}
+    .kicker{margin:0 0 4px;color:var(--muted);font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+    .subtle{color:var(--muted);font-size:11px}
+    table{width:100%;border-collapse:collapse}
+    .problems{border-top:2px solid var(--ink)}
+    .problems th{padding:8px 10px;color:var(--muted);font:10px var(--mono);text-align:left;text-transform:uppercase}
+    .problems td{padding:0 10px;height:66px;border-bottom:1px solid var(--line);font-size:13px}
+    .problems tr:hover td{background:#eeece6}
+    .pid{width:44px;color:var(--muted);font:12px var(--mono)}
+    .pid.done{color:var(--green)}
+    .ptitle{font-weight:700}.ptitle small{display:block;margin-top:2px;color:var(--muted);font-size:11px;font-weight:400}
+    .score{width:60px;color:var(--muted);font:11px var(--mono);text-align:right}
+    .ratio{width:170px}
+    .bar{height:4px;margin-top:5px;background:#dfdcd4}.bar i{display:block;height:100%;background:var(--green)}
+    .ratio span{color:var(--muted);font:11px var(--mono)}
+    .diff{width:64px;text-align:right}
+    .diff b{padding:3px 7px;border:1px solid #c7c4bc;color:var(--muted);font-size:10px;font-weight:400}
+    .diff b.medium{border-color:#d9b38f;color:#a65f2b;background:var(--orange-soft)}
+    .diff b.hard{border-color:#ddb3b0;color:var(--red);background:#f7ecea}
+    .mine{width:150px;text-align:right}
+    .mine .ok{color:var(--green);font:700 12px var(--mono)}
+    .mine .bad{color:var(--red);font:700 12px var(--mono)}
+    .mine .none{color:var(--muted);font:11px var(--mono)}
+    .side{display:grid;align-content:start;gap:26px}
+    .panel{padding:16px 0;border-top:1px solid var(--line)}
+    .panel:first-child{border-top:2px solid var(--ink)}
+    .panel h2{margin:0 0 12px;font-size:17px;letter-spacing:-.03em}
+    .stat{display:flex;align-items:baseline;justify-content:space-between;margin-top:11px;color:var(--muted);font-size:11px}
+    .stat strong{color:var(--ink);font:700 14px var(--mono)}
+    .stat.big strong{font-size:26px;letter-spacing:-.05em}
+    .rankbar{position:relative;height:6px;margin-top:14px;background:#dfdcd4}
+    .rankbar i{position:absolute;top:-3px;width:3px;height:12px;background:var(--orange)}
+    .notice{padding:11px 0;border-bottom:1px solid #e2e0d8}
+    .notice:last-child{border-bottom:0}
+    .notice b{display:block;font-size:12px;font-weight:700}
+    .notice span{color:var(--muted);font-size:11px}
+    .notice em{float:right;color:var(--muted);font:10px var(--mono);font-style:normal}
+    .board{margin-top:42px}
+    .board-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+    .board-note{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px}
+    .frozen{padding:3px 8px;border:1px solid #d9b38f;color:var(--gold);background:var(--orange-soft);font:10px var(--mono)}
+    .standings{margin-top:12px;border-top:2px solid var(--ink)}
+    .standings th{padding:9px 8px;color:var(--muted);font:10px var(--mono);text-align:left;text-transform:uppercase;white-space:nowrap}
+    .standings td{height:40px;padding:0 8px;border-bottom:1px solid #e2e0d8;font-size:12px}
+    .standings tr.me td{background:var(--orange-soft)}
+    .standings tr.me .who b:after{margin-left:6px;color:var(--orange);font:10px var(--mono);content:"YOU"}
+    .rk{width:48px;color:var(--muted);font:12px var(--mono)}
+    .rk.top{color:var(--gold);font-weight:700}
+    .who b{font-weight:700}.who small{display:block;color:var(--muted);font:10px var(--mono)}
+    .solved{width:56px;font:700 13px var(--mono);color:var(--green)}
+    .penalty{width:96px;font:12px var(--mono);color:#4f554f}
+    .cell{width:74px}
+    .cell b{display:block;font:700 11px var(--mono);color:var(--green)}
+    .cell b.first{color:var(--gold)}
+    .cell em{display:block;color:var(--muted);font:10px var(--mono);font-style:normal}
+    .cell.fail b{color:var(--red)}
+    .cell.empty{color:#c2bfb8;font:11px var(--mono)}
+    @keyframes pulse{50%{opacity:.45;transform:scale(.8)}}
+    @media(max-width:1080px){.hero{display:block}.live{margin-top:22px;padding:16px 0 0;border-top:1px solid var(--line);border-left:0}.grid{display:block}.side{margin-top:36px}.ratio{display:none}}
+    @media(max-width:760px){nav{display:none}.wrap{width:calc(100% - 28px)}.board{overflow-x:auto}.standings{min-width:680px}}
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><svg viewBox="0 0 104 64" aria-hidden="true"><path fill="#df7657" d="M16 8h72v48H16zM8 20h88v24H8zM0 24h104v16H0zM28 56h8v8h-8zM44 56h8v8h-8zM68 56h8v8h-8zM84 56h8v8h-8z"/><path fill="#202936" d="M34 24h8v12h-8zM62 24h8v12h-8z"/></svg><span>CodeAgent OJ</span></a>
+  <nav><a href="#">主页</a><a href="#">题库</a><a class="active" href="#">竞赛</a><a href="#">排行榜</a><a href="#">提交记录</a></nav>
+  <div class="lang" role="group" aria-label="语言"><b>中文</b><i>EN</i></div>
+</header>
+
+<main class="wrap">
+  <div class="statebar">
+    演示三种赛程状态：
+    <button data-state="upcoming">报名中</button>
+    <button class="on" data-state="live">进行中</button>
+    <button data-state="ended">已结束</button>
+    <span style="margin-left:auto">这是设计稿（静态 HTML），不是真实数据</span>
+  </div>
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Contest / Weekly #07</p>
+      <h1>2026 秋季周赛 #07</h1>
+      <p class="lead">五道题，两小时。ACM 赛制按解题数与罚时排名；提交即时评测，比赛最后 20 分钟进入冻结期，榜单只显示冻结前的状态。</p>
+      <div class="chips">
+        <span class="chip">时长 2 小时</span>
+        <span class="chip">5 题</span>
+        <span class="chip orange">ACM · 罚时制</span>
+        <span class="chip">Java 21 / C++17 / C17</span>
+        <span class="chip">2026-10-04 19:00 – 21:00 (UTC+8)</span>
+      </div>
+    </div>
+    <div class="live on" id="liveBox">
+      <div class="live-label"><i></i><span id="liveText">进行中 · LIVE</span></div>
+      <div class="countdown" id="countdown">01:47:23</div>
+      <div class="live-meta" id="liveMeta">距离结束 / 21:00</div>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button class="primary" id="enterBtn">进入比赛</button>
+    <button id="signupBtn">已报名（412 人）</button>
+    <a href="#board">查看榜单</a>
+    <button class="ghost">比赛说明</button>
+  </div>
+
+  <section class="grid">
+    <div>
+      <div class="section-head">
+        <div><p class="kicker">Problems / 05</p><h2>赛题</h2></div>
+        <span class="subtle">已完成 2 / 5 · 罚时 01:12:40</span>
+      </div>
+      <table class="problems">
+        <thead><tr><th>#</th><th>题目</th><th style="text-align:right">分值</th><th>通过 / 提交</th><th style="text-align:right">难度</th><th style="text-align:right">我的状态</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="pid done">A</td>
+            <td class="ptitle">交错序列<small>数组 · 双指针</small></td>
+            <td class="score">100</td>
+            <td class="ratio"><span>298 / 341</span><div class="bar"><i style="width:87%"></i></div></td>
+            <td class="diff"><b>简单</b></td>
+            <td class="mine"><span class="ok">AC · 00:12:31</span></td>
+          </tr>
+          <tr>
+            <td class="pid done">B</td>
+            <td class="ptitle">环形路径<small>图 · BFS</small></td>
+            <td class="score">150</td>
+            <td class="ratio"><span>164 / 402</span><div class="bar"><i style="width:41%"></i></div></td>
+            <td class="diff"><b class="medium">中等</b></td>
+            <td class="mine"><span class="ok">AC · 01:00:09</span></td>
+          </tr>
+          <tr>
+            <td class="pid">C</td>
+            <td class="ptitle">最小窗口<small>字符串 · 滑动窗口</small></td>
+            <td class="score">200</td>
+            <td class="ratio"><span>76 / 258</span><div class="bar"><i style="width:29%"></i></div></td>
+            <td class="diff"><b class="medium">中等</b></td>
+            <td class="mine"><span class="bad">尝试 2 次</span></td>
+          </tr>
+          <tr>
+            <td class="pid">D</td>
+            <td class="ptitle">区间合并 II<small>排序 · 贪心</small></td>
+            <td class="score">250</td>
+            <td class="ratio"><span>31 / 149</span><div class="bar"><i style="width:21%"></i></div></td>
+            <td class="diff"><b class="hard">困难</b></td>
+            <td class="mine"><span class="none">未提交</span></td>
+          </tr>
+          <tr>
+            <td class="pid">E</td>
+            <td class="ptitle">树上的距离和<small>树 · DFS · 前缀和</small></td>
+            <td class="score">300</td>
+            <td class="ratio"><span>4 / 63</span><div class="bar"><i style="width:6%"></i></div></td>
+            <td class="diff"><b class="hard">困难</b></td>
+            <td class="mine"><span class="none">未提交</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="subtle" style="margin-top:12px">罚时规则：每题首次 AC 之前，每次错误提交 +20 分钟；未 AC 的题不计罚时，也不计入解题数。</p>
+    </div>
+
+    <aside class="side">
+      <section class="panel">
+        <p class="kicker">Your standing</p>
+        <h2>我的成绩</h2>
+        <div class="stat big"><span>排名</span><strong>37 <span style="color:#858981;font-size:12px">/ 412</span></strong></div>
+        <div class="rankbar" title="前 9%"><i style="left:9%"></i></div>
+        <div class="stat"><span>已解出</span><strong>2 / 5</strong></div>
+        <div class="stat"><span>罚时</span><strong>01:12:40</strong></div>
+        <div class="stat"><span>最近提交</span><strong>3 分钟前</strong></div>
+      </section>
+
+      <section class="panel">
+        <p class="kicker">Announcements</p>
+        <h2>公告</h2>
+        <div class="notice"><em>19:42</em><b>比赛最后 20 分钟进入冻结期</b><span>冻结后榜单不再更新，赛后自动解冻并重算排名。</span></div>
+        <div class="notice"><em>19:05</em><b>E 题数据已修正</b><span>第 7 个测试点边界有误，受影响提交已自动重判。</span></div>
+        <div class="notice"><em>18:30</em><b>比赛已开始</b><span>迟到仍可参加，罚时从开赛时间起算。</span></div>
+      </section>
+
+      <section class="panel">
+        <p class="kicker">Rules</p>
+        <h2>比赛规则</h2>
+        <div class="stat"><span>赛制</span><strong>ACM</strong></div>
+        <div class="stat"><span>罚时</span><strong>+20 分钟 / 错</strong></div>
+        <div class="stat"><span>语言</span><strong>3 种</strong></div>
+        <div class="stat"><span>榜单刷新</span><strong>30 秒</strong></div>
+        <p class="subtle" style="margin-top:12px">禁止多账号参赛与互相抄袭；比赛期间 Agent 辅导保持开启，但不会给出可直接提交的完整代码。</p>
+      </section>
+    </aside>
+  </section>
+
+  <section class="board" id="board">
+    <div class="board-head">
+      <div><p class="kicker">Live standings · ACM</p><h2>实时榜单</h2></div>
+      <div class="board-note"><span class="frozen">冻结中（最后 20 分钟）</span><span>每 30 秒自动刷新 · 上次刷新 <b id="tick">刚刚</b></span></div>
+    </div>
+    <table class="standings">
+      <thead><tr><th>#</th><th>选手</th><th>已解</th><th>罚时</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr></thead>
+      <tbody>
+        <tr><td class="rk top">01</td><td class="who"><b>Yunlan</b><small>@yunlan</small></td><td class="solved">5</td><td class="penalty">04:12:08</td><td class="cell"><b class="first">00:08:41</b></td><td class="cell"><b>00:31:02</b></td><td class="cell"><b>00:52:19</b><em>+1</em></td><td class="cell"><b>01:20:55</b></td><td class="cell"><b>02:19:11</b><em>+2</em></td></tr>
+        <tr><td class="rk top">02</td><td class="who"><b>Qiao Wen</b><small>@qiao</small></td><td class="solved">4</td><td class="penalty">03:08:44</td><td class="cell"><b class="first">00:11:20</b></td><td class="cell"><b>00:44:36</b></td><td class="cell"><b>01:02:03</b></td><td class="cell"><b>01:50:45</b></td><td class="cell fail"><b>—</b><em>+3</em></td></tr>
+        <tr><td class="rk top">03</td><td class="who"><b>Lian</b><small>@lianx</small></td><td class="solved">4</td><td class="penalty">03:41:12</td><td class="cell"><b class="first">00:14:55</b></td><td class="cell"><b>00:39:18</b></td><td class="cell"><b>01:20:07</b><em>+2</em></td><td class="cell"><b>01:46:52</b></td><td class="cell empty">·</td></tr>
+        <tr><td class="rk">04</td><td class="who"><b>Mo Yan</b><small>@moyan</small></td><td class="solved">3</td><td class="penalty">02:22:31</td><td class="cell"><b class="first">00:17:03</b></td><td class="cell"><b>00:58:44</b></td><td class="cell"><b>01:06:44</b></td><td class="cell empty">·</td><td class="cell empty">·</td></tr>
+        <tr><td class="rk">05</td><td class="who"><b>He Yu</b><small>@heyu</small></td><td class="solved">3</td><td class="penalty">02:48:09</td><td class="cell"><b class="first">00:22:37</b></td><td class="cell"><b>01:01:12</b></td><td class="cell"><b>01:24:20</b><em>+1</em></td><td class="cell empty">·</td><td class="cell empty">·</td></tr>
+        <tr><td class="rk">36</td><td class="who"><b>Xu Chen</b><small>@xuchen</small></td><td class="solved">2</td><td class="penalty">01:16:02</td><td class="cell"><b class="first">00:19:44</b></td><td class="cell"><b>01:16:02</b></td><td class="cell empty">·</td><td class="cell empty">·</td><td class="cell empty">·</td></tr>
+        <tr class="me"><td class="rk">37</td><td class="who"><b>县城の鼠</b><small>@kk</small></td><td class="solved">2</td><td class="penalty">01:12:40</td><td class="cell"><b class="first">00:12:31</b></td><td class="cell"><b>01:00:09</b></td><td class="cell fail"><b>—</b><em>+2</em></td><td class="cell empty">·</td><td class="cell empty">·</td></tr>
+        <tr><td class="rk">38</td><td class="who"><b>Ning</b><small>@ning</small></td><td class="solved">2</td><td class="penalty">01:22:18</td><td class="cell"><b class="first">00:26:12</b></td><td class="cell"><b>01:02:18</b><em>+1</em></td><td class="cell empty">·</td><td class="cell empty">·</td><td class="cell empty">·</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  // 三种赛程状态的演示（真实实现里由后端 contest.status 决定）
+  const shapes = {
+    upcoming: { cls: "upcoming", text: "报名中 · 未开始", countdown: "02:13:47:09", meta: "距离开赛 / 2026-10-04 19:00", primary: "报名参赛", live: false },
+    live:     { cls: "on",       text: "进行中 · LIVE",     countdown: "01:47:23",     meta: "距离结束 / 21:00",       primary: "进入比赛", live: true },
+    ended:    { cls: "done",     text: "已结束",           countdown: "赛程结束",      meta: "最终排名已生成 / 我的名次 37", primary: "查看赛后题解", live: false }
+  };
+  const box = document.getElementById("liveBox");
+  document.querySelectorAll(".statebar button").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".statebar button").forEach((item) => item.classList.toggle("on", item === button));
+      const shape = shapes[button.dataset.state];
+      box.className = "live " + (shape.cls === "on" ? "on" : shape.cls === "done" ? "done" : "");
+      document.getElementById("liveText").textContent = shape.text;
+      document.getElementById("countdown").textContent = shape.countdown;
+      document.getElementById("liveMeta").textContent = shape.meta;
+      document.getElementById("enterBtn").textContent = shape.primary;
+    });
+  });
+
+  // 倒计时：仅在“进行中”时走动，用来展示 live 状态
+  let remaining = 1 * 3600 + 47 * 60 + 23;
+  setInterval(() => {
+    if (!box.classList.contains("on")) return;
+    remaining = Math.max(0, remaining - 1);
+    const pad = (value) => String(value).padStart(2, "0");
+    document.getElementById("countdown").textContent =
+      pad(Math.floor(remaining / 3600)) + ":" + pad(Math.floor((remaining % 3600) / 60)) + ":" + pad(remaining % 60);
+  }, 1000);
+
+  // 榜单“刷新”感：每 30 秒更新刷新时间（真实实现里拉 /api/contests/{id}/standings）
+  let ticks = 0;
+  setInterval(() => {
+    ticks += 1;
+    document.getElementById("tick").textContent = ticks * 30 + " 秒前";
+  }, 30000);
+
+  document.getElementById("enterBtn").addEventListener("click", () => { location.hash = "#board"; });
+</script>
+</body>
+</html>

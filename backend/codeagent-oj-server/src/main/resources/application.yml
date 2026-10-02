@@ -64,6 +64,9 @@ mybatis-plus:
       id-type: assign_id
 
 app:
+  contest:
+    # 竞赛进行中禁止使用 Agent 助手（含自动诊断）；练习赛可设为 false 恢复"辅导开启"赛制
+    agent-locked: ${CONTEST_AGENT_LOCKED:true}
   judge:
     queue: ${JUDGE_QUEUE:oj.submissions}
     poll-ms: ${JUDGE_OUTBOX_POLL_MS:500}

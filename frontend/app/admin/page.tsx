@@ -113,6 +113,8 @@ export default function AdminPage() {
     <div role="tablist" aria-label="管理视图" style={{display:"flex",justifyContent:"center",gap:4,maxWidth:1200,margin:"24px auto 2px",padding:4,border:"1px solid #d8d5ce",background:"#ebe9e2",width:"fit-content"}}>
       <button role="tab" aria-selected={view === "problems"} onClick={() => setView("problems")} style={{border:0,padding:"10px 17px",background:view === "problems" ? "#252a2d" : "transparent",color:view === "problems" ? "#f8f7f3" : "#6f736e",font:"600 12px 'Avenir Next','Segoe UI',Arial,sans-serif",cursor:"pointer",transition:"transform .2s ease, background .2s ease"}}>题目管理</button>
       <button role="tab" aria-selected={view === "users"} onClick={() => setView("users")} style={{border:0,padding:"10px 17px",background:view === "users" ? "#252a2d" : "transparent",color:view === "users" ? "#f8f7f3" : "#6f736e",font:"600 12px 'Avenir Next','Segoe UI',Arial,sans-serif",cursor:"pointer",transition:"transform .2s ease, background .2s ease"}}>用户管理 <span style={{marginLeft:6,color:view === "users" ? "#e2a078" : "#a2a49d",fontFamily:"Consolas,monospace"}}>{users.length}</span></button>
+      {/* 竞赛管理是独立路由（不是本页的 tab 状态），用普通 <a> 跳转即可，避免依赖 next/link 的 import */}
+      <a href="/admin/contests" style={{display:"inline-block",padding:"10px 17px",color:"#6f736e",font:"600 12px 'Avenir Next','Segoe UI',Arial,sans-serif",textDecoration:"none",transition:"transform .2s ease, background .2s ease"}}>竞赛管理</a>
     </div>
 
     {message && <p className={styles.message} role="status">{message}</p>}
